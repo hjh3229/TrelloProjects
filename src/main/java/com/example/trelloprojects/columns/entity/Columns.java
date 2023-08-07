@@ -39,7 +39,7 @@ public class Columns {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @OneToMany(mappedBy = "column")
+    @OneToMany(mappedBy = "columns")
     private List<Card> cardList = new ArrayList<>();
 
     public Columns(AddColumnsRequest request, Board board) {
