@@ -7,6 +7,8 @@ import com.example.trelloprojects.card.entity.Card;
 import com.example.trelloprojects.card.repository.CardRepository;
 import com.example.trelloprojects.colum.entity.Colum;
 import com.example.trelloprojects.colum.repository.ColumRepository;
+import com.example.trelloprojects.user.entity.User;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,5 +40,20 @@ public class CardService {
     return cardRepository.findById(cardId).orElseThrow(() ->
         new IllegalArgumentException("존재하지 않는 카드입니다.")
     );
+  }
+
+  public void editTitle(Long cardId, String title) {
+    Card card = findCard(cardId);
+    card.setTitle(title);
+  }
+
+  public void editDescription(Long cardId, String description) {
+    Card card = findCard(cardId);
+    card.setDescription(description);
+  }
+
+  public void editDeadLine(Long cardId, LocalDateTime deadLine) {
+    Card card = findCard(cardId);
+    card.setDeadLine(deadLine);
   }
 }
