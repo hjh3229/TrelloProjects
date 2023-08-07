@@ -6,9 +6,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
+@Table(name = "board")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
 

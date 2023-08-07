@@ -2,12 +2,16 @@ package com.example.trelloprojects.comment.entity;
 
 import com.example.trelloprojects.card.entity.Card;
 import com.example.trelloprojects.user.entity.User;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 @Entity
 @Getter
+@Setter
+@Table(name = "comment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
 

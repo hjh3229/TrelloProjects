@@ -6,8 +6,11 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 @Entity
 @Getter
+@Setter
+@Table(name = "invitation")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Invitation {
 
@@ -22,11 +25,12 @@ public class Invitation {
     String status;
 
     @ManyToOne
-    private User invitee_id;
+    @JoinColumn(name = "invitee_id")
+    private User invitee;
 
     @ManyToOne
     @JoinColumn(name = "inviter_id")
-    private User inviter_id;
+    private User inviter;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id")
