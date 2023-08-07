@@ -1,5 +1,8 @@
 package com.example.trelloprojects.list.repository;
 
-public class ListRepository {
+import com.example.trelloprojects.list.entity.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ListRepository extends JpaRepository<List, Long> {
 
 }

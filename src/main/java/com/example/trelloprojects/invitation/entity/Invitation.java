@@ -1,6 +1,7 @@
-package com.example.trelloprojects.card.entity;
+package com.example.trelloprojects.invitation.entity;
 
-import com.example.trelloprojects.list.entity.List;
+import com.example.trelloprojects.user.entity.User;
+import com.example.trelloprojects.workspace.entity.Workspace;
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -8,32 +9,32 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Card {
+public class Invitation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    String title;
+    String invitee_email;
 
     @Column
-    String description;
+    String status;
 
-    @Column
-    String color;
+    @ManyToOne
+    private User invitee_id;
 
-    @Column
-    LocalDateTime deadLine;
+    @ManyToOne
+    @JoinColumn(name = "inviter_id")
+    private User inviter_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "list_id")
-    private List list;
+    @JoinColumn(name = "workspace_id")
+    private Workspace workspace;
 }
