@@ -8,10 +8,14 @@ import com.example.trelloprojects.board.repository.BoardRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
-@Component
+@Transactional
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -22,8 +26,8 @@ public class BoardService {
         return new BoardResponseDto(board);
     }
 
-    public BoardResponseDto getOneBoard(Long boardId) {
-      Board board =   boardRepository.findById(boardId).orElseThrow(
+    public BoardResponseDto getOneBoard(Long id) {
+      Board board =   boardRepository.findById(id).orElseThrow(
               ()->new IllegalArgumentException()
       );
          return new BoardResponseDto(board);

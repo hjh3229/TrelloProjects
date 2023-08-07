@@ -16,11 +16,11 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    String name;
+    @Column
+    private String name;
 
     @Column
-    String description;
+    private String description;
 
     @Column
     @Enumerated(value = EnumType.STRING)
