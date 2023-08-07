@@ -1,6 +1,6 @@
 package com.example.trelloprojects.card.entity;
 
-import com.example.trelloprojects.list.entity.List;
+import com.example.trelloprojects.colum.entity.Colum;
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,5 +35,5 @@ public class Card {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "list_id")
-    private List list;
+    private Colum colum;
 }
