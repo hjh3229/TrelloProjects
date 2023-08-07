@@ -1,4 +1,4 @@
-package com.example.trelloprojects.list.entity;
+package com.example.trelloprojects.colum.entity;
 
 import com.example.trelloprojects.board.entity.Board;
 import jakarta.persistence.Column;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class List {
+public class Colum {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
