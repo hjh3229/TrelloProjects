@@ -17,24 +17,26 @@ public class BoardController {
     //shift + f6
     //Board 생성
     @PostMapping
-    public BoardResponseDto createBoard(BoardRequestDto requestDto){
+    public BoardResponseDto createBoard(@RequestBody BoardRequestDto requestDto){
+        String name= requestDto.getName();
         return boardService.createBoard(requestDto);}
 
-    //특정 Board 조회
+    //특정 Board 조회-> board 안에 모든 컬럼이 보이는 것으로
     @GetMapping("/board")
-    public BoardResponseDto getOneBoard(Long id){
+    public BoardResponseDto getOneBoard(@RequestParam Long id){
         return boardService.getOneBoard(id);
         }
 
     //BoardName 변경
-    @PutMapping("/board")
-    public BoardResponseDto changeBoardName(Long id, BoardRequestDto requestDto){
+    @PutMapping("/board/{board_id}")
+
+    public BoardResponseDto changeBoardName(@RequestParam Long id, @RequestBody BoardRequestDto requestDto){
         return boardService.changeBoardName(id,requestDto);
     }
 
     //BoardDescription 변경
     @PutMapping
-    public BoardResponseDto changeBoardDescription(Long id,BoardRequestDto requestDto){
+    public BoardResponseDto changeBoardDescription(@RequestParam Long id, @RequestBody BoardRequestDto requestDto){
         return boardService.changeBoardDescription(id,requestDto);
     }
 
