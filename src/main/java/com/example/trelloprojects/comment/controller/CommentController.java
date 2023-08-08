@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,5 +34,11 @@ public class CommentController {
   public ResponseEntity<MsgResponseDto> editComment(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CommentRequestDto requestDto, @RequestParam Long commentId) {
     commentService.editComment(userDetails.getUser(), requestDto, commentId);
     return ResponseEntity.ok().body(new MsgResponseDto("댓글 수정 성공", HttpStatus.OK.value()));
+  }
+
+  @DeleteMapping
+  public ResponseEntity<MsgResponseDto> deleteComment(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam Long commentId) {
+    commentService.deleteComment(userDetails.getUser(), commentId);
+    return ResponseEntity.ok().body(new MsgResponseDto("댓글 삭제 성공", HttpStatus.OK.value()));
   }
 }
