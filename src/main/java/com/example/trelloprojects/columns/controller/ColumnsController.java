@@ -33,8 +33,8 @@ public class ColumnsController {
     }
 
     @PutMapping("/column/{columnId}")
-    public ResponseEntity<Columns> updateColumns(@PathVariable Long columnId, @RequestBody
-    UpdateColumnsRequest request) {
+    public ResponseEntity<Columns> updateColumns(@PathVariable Long columnId,
+            @RequestBody UpdateColumnsRequest request) {
         return ResponseEntity.ok().body(columnsService.updateColumns(columnId, request));
     }
 
@@ -49,12 +49,11 @@ public class ColumnsController {
         return ResponseEntity.ok().body(new CardResponseDto(cardService.findCard(cardId)));
     }
 
-    @PostMapping("/column/{cardId}/reorder")
-    public ResponseEntity<Void> reorder(@PathVariable Long cardId,
+    @PutMapping("/column/{columnId}/reorder")
+    public ResponseEntity<Void> reorder(@PathVariable Long columnId,
             @RequestBody ReorderRequest request) {
-        columnsService.reorder(cardId, request);
+        columnsService.reorder(columnId, request);
         return ResponseEntity.ok().build();
     }
-
 
 }

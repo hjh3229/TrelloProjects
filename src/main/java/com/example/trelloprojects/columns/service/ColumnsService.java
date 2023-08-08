@@ -31,14 +31,14 @@ public class ColumnsService {
 
     @Transactional
     public Columns updateColumns(Long columnId, UpdateColumnsRequest request) {
-        Columns findColumns = columnsRepository.findById(columnId).orElseThrow(
-                () -> new IllegalArgumentException("not found" + columnId)
-        );
-        return findColumns.update(request);
+        Columns columns = findColumn(columnId);
+        return columns.update(request);
     }
 
     @Transactional
     public void deleteColumns(Long columnId) {
+        Columns columns = findColumn(columnId);
+        columnsRepository.decrementBelow(columns.getPosition());
         columnsRepository.deleteById(columnId);
     }
 
@@ -48,24 +48,24 @@ public class ColumnsService {
     }
 
     @Transactional
-    public void reorder(Long cardId, ReorderRequest request) {
-        Columns columns = columnsRepository.findById(cardId)
-                .orElseThrow(IllegalArgumentException::new);
+    public void reorder(Long columnId, ReorderRequest request) {
+        Columns columns = findColumn(columnId);
 
         Long oldPosition = columns.getPosition();
         Long newPosition = request.getPosition();
 
         if (newPosition > oldPosition) {
-            columnsRepository.decrementAboveToPosition(newPosition, oldPosition,
-                    String.valueOf(columns.getId()));
+            columnsRepository.decrementAboveToPosition(newPosition, oldPosition);
         } else {
-            columnsRepository.incrementBelowToPosition(newPosition, oldPosition,
-                    String.valueOf(columns.getId()));
+            columnsRepository.incrementBelowToPosition(newPosition, oldPosition);
         }
 
         columns.setPosition(request.getPosition());
         columnsRepository.save(columns);
+    }
 
+    public Columns findColumn(Long columnId) {
+        return columnsRepository.findById(columnId).orElseThrow(IllegalArgumentException::new);
     }
 
 }

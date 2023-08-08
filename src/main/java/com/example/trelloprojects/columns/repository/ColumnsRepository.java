@@ -11,17 +11,17 @@ public interface ColumnsRepository extends JpaRepository<Columns, Long> {
 
     Long countColumnsByBoard(Board board);
 
-
     @Modifying
-    @Query("UPDATE Columns SET position = position + 1 WHERE position >= :newPosition AND position < :oldPosition  AND id <> :id")
+    @Query("UPDATE Columns SET position = position + 1 WHERE position >= :newPosition AND position < :oldPosition")
     void incrementBelowToPosition(@Param("newPosition") Long newPosition,
-            @Param("oldPosition") Long oldPosition,
-            @Param("id") String id);
-
+            @Param("oldPosition") Long oldPosition);
 
     @Modifying
-    @Query("UPDATE Columns SET position = position - 1 WHERE position <= :newPosition AND position > :oldPosition  AND id <> :id")
+    @Query("UPDATE Columns SET position = position - 1 WHERE position <= :newPosition AND position > :oldPosition ")
     void decrementAboveToPosition(@Param("newPosition") Long newPosition,
-            @Param("oldPosition") Long oldPosition,
-            @Param("id") String id);
+            @Param("oldPosition") Long oldPosition);
+
+    @Modifying
+    @Query("UPDATE Columns SET position = position - 1 WHERE position >= :position")
+    void decrementBelow(@Param("position") Long position);
 }
