@@ -1,4 +1,4 @@
-package com.example.trelloprojects.card.common.dto;
+package com.example.trelloprojects.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
