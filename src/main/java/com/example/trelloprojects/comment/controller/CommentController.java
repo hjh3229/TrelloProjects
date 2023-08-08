@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,5 +27,11 @@ public class CommentController {
   public ResponseEntity<MsgResponseDto> createComment(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CommentRequestDto requestDto, @RequestParam Long cardId) {
     commentService.createComment(userDetails.getUser(), requestDto, cardId);
     return ResponseEntity.ok().body(new MsgResponseDto("댓글 추가 성공", HttpStatus.CREATED.value()));
+  }
+
+  @PutMapping
+  public ResponseEntity<MsgResponseDto> editComment(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CommentRequestDto requestDto, @RequestParam Long commentId) {
+    commentService.editComment(userDetails.getUser(), requestDto, commentId);
+    return ResponseEntity.ok().body(new MsgResponseDto("댓글 수정 성공", HttpStatus.OK.value()));
   }
 }
