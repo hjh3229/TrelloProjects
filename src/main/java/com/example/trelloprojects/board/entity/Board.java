@@ -1,14 +1,22 @@
 package com.example.trelloprojects.board.entity;
 
+import com.example.trelloprojects.board.dto.ApiResponseDto;
 import com.example.trelloprojects.board.dto.BoardRequestDto;
+import com.example.trelloprojects.card.entity.Card;
 import com.example.trelloprojects.workspace.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@Table(name = "board")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
 
@@ -30,6 +38,9 @@ public class Board {
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
 
+    @OneToMany(mappedBy = "board")
+    private List<Card> cardList = new ArrayList<>();
+
     public Board(BoardRequestDto requestDto){
         this.name=requestDto.getName();
         this.description= requestDto.getDescription();
@@ -37,8 +48,10 @@ public class Board {
     }
 
 
-    public void updateName(BoardRequestDto requestDto) {
+    public ResponseEntity<ApiResponseDto> updateName(BoardRequestDto requestDto) {
         this.name= requestDto.getName();
+        ApiResponseDto apiResponseDto = new ApiResponseDto( "이름이 변경되었습니다.", HttpStatus.OK.value());
+        return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
     }
     public void updateDescription(BoardRequestDto requestDto) {
         this.description= requestDto.getDescription();
