@@ -1,5 +1,7 @@
 package com.example.trelloprojects.workspace.service;
 
+import com.example.trelloprojects.common.error.BusinessException;
+import com.example.trelloprojects.common.error.ErrorCode;
 import com.example.trelloprojects.user.entity.User;
 import com.example.trelloprojects.workspace.dto.CreateWorkspaceRequestDto;
 import com.example.trelloprojects.workspace.dto.UpdateWorkspaceRequestDto;
@@ -55,7 +57,7 @@ public class WorkspaceService {
         Workspace workspace = findWorkspace(id);
 
         if (workspace.getStatus() == WorkspaceStatus.DELETED) {
-            throw new IllegalArgumentException("삭제된 워크스페이스에 접근할 수 없습니다.");
+            throw new BusinessException(ErrorCode.DELETED_WORKSPACE);
         }
 
         return workspace;
@@ -65,7 +67,7 @@ public class WorkspaceService {
         Workspace workspace = findWorkspace(id);
 
         if (workspace.getStatus() == WorkspaceStatus.ACTIVE) {
-            throw new IllegalArgumentException("이미 활성화된 워크스페이스입니다.");
+            throw new BusinessException(ErrorCode.ALREADY_ACTIVATED_WORKSPACE);
         }
 
         return workspace;
@@ -73,6 +75,6 @@ public class WorkspaceService {
 
     private Workspace findWorkspace(Long id) {
         return workspaceRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 워크스페이스입니다."));
+                new BusinessException(ErrorCode.WORKSPACE_NOT_FOUND));
     }
 }
