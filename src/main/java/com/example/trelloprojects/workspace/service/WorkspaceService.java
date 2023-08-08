@@ -1,5 +1,8 @@
 package com.example.trelloprojects.workspace.service;
 
+import com.example.trelloprojects.board.dto.BoardResponseDto;
+import com.example.trelloprojects.board.entity.Board;
+import com.example.trelloprojects.board.repository.BoardRepository;
 import com.example.trelloprojects.common.error.BusinessException;
 import com.example.trelloprojects.common.error.ErrorCode;
 import com.example.trelloprojects.user.entity.User;
@@ -15,12 +18,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
     private final UserWorkspaceRepository userWorkspaceRepository;
+    private final BoardRepository boardRepository;
 
     @Transactional
     public WorkspaceResponseDto createWorkspace(CreateWorkspaceRequestDto requestDto, User user) {
@@ -51,6 +57,16 @@ public class WorkspaceService {
     public void reopenWorkspace(Long id) {
         Workspace workspace = findDeletedWorkspace(id);
         workspace.reopen();
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoardResponseDto> getBoards(Long id) {
+        Workspace workspace = findActiveWorkspace(id);
+
+        return boardRepository.findByWorkspace(workspace)
+                .stream()
+                .map(Board::toDto)
+                .toList();
     }
 
     private Workspace findActiveWorkspace(Long id) {

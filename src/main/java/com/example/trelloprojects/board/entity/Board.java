@@ -1,6 +1,7 @@
 package com.example.trelloprojects.board.entity;
 
 import com.example.trelloprojects.board.dto.BoardRequestDto;
+import com.example.trelloprojects.board.dto.BoardResponseDto;
 import com.example.trelloprojects.workspace.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -33,17 +34,26 @@ public class Board {
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
 
-    public Board(BoardRequestDto requestDto){
-        this.name=requestDto.getName();
-        this.description= requestDto.getDescription();
-        this.color=requestDto.getColor();
+    public Board(BoardRequestDto requestDto) {
+        this.name = requestDto.getName();
+        this.description = requestDto.getDescription();
+        this.color = requestDto.getColor();
     }
 
+    public BoardResponseDto toDto() {
+        return BoardResponseDto.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .color(color)
+                .build();
+    }
 
     public void updateName(BoardRequestDto requestDto) {
-        this.name= requestDto.getName();
+        this.name = requestDto.getName();
     }
+
     public void updateDescription(BoardRequestDto requestDto) {
-        this.description= requestDto.getDescription();
+        this.description = requestDto.getDescription();
     }
 }
