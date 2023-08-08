@@ -1,6 +1,7 @@
 package com.example.trelloprojects.user.entity;
 
 
+import com.example.trelloprojects.member.dto.MemberResponseDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -37,4 +38,12 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
+
+    public MemberResponseDto toMemberResponseDto() {
+        return MemberResponseDto.builder()
+                .id(this.id)
+                .username(this.username)
+                .email(this.email)
+                .build();
+    }
 }
