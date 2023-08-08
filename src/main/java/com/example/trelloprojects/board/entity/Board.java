@@ -46,6 +46,7 @@ public class Board {
         this.name=requestDto.getName();
         this.description= requestDto.getDescription();
         this.color=requestDto.getColor();
+        this.workspace=requestDto.getWorkspace();
     }
 
 
@@ -54,7 +55,9 @@ public class Board {
         ApiResponseDto apiResponseDto = new ApiResponseDto( "이름이 변경되었습니다.", HttpStatus.OK.value());
         return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
     }
-    public void updateDescription(BoardRequestDto requestDto) {
+    public  ResponseEntity<ApiResponseDto> updateDescription(BoardRequestDto requestDto) {
         this.description= requestDto.getDescription();
+        ApiResponseDto apiResponseDto = new ApiResponseDto( "설명이 변경되었습니다.", HttpStatus.OK.value());
+        return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
     }
 }
