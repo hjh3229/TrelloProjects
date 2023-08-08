@@ -10,5 +10,4 @@ import java.util.Optional;
 @Repository
 public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 
-    Optional<Workspace> findByIdAndStatus(Long id, WorkspaceStatus workspaceStatus);
 }

@@ -5,6 +5,7 @@ import com.example.trelloprojects.workspace.dto.CreateWorkspaceRequestDto;
 import com.example.trelloprojects.workspace.dto.UpdateWorkspaceRequestDto;
 import com.example.trelloprojects.workspace.dto.WorkspaceResponseDto;
 import com.example.trelloprojects.workspace.service.WorkspaceService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,7 +19,7 @@ public class WorkspaceController {
     private final WorkspaceService workspaceService;
 
     @PostMapping
-    public ResponseEntity<WorkspaceResponseDto> createWorkspace(@RequestBody CreateWorkspaceRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<WorkspaceResponseDto> createWorkspace(@RequestBody @Valid CreateWorkspaceRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         WorkspaceResponseDto responseDto = workspaceService.createWorkspace(requestDto, userDetails.getUser());
         return ResponseEntity.ok(responseDto);
     }
@@ -30,7 +31,7 @@ public class WorkspaceController {
     }
 
     @PutMapping("/{workspaceId}")
-    public ResponseEntity<WorkspaceResponseDto> updateWorkspace(@PathVariable Long workspaceId, @RequestBody UpdateWorkspaceRequestDto requestDto) {
+    public ResponseEntity<WorkspaceResponseDto> updateWorkspace(@PathVariable Long workspaceId, @RequestBody @Valid UpdateWorkspaceRequestDto requestDto) {
         WorkspaceResponseDto responseDto = workspaceService.updateWorkspace(workspaceId, requestDto);
         return ResponseEntity.ok(responseDto);
     }

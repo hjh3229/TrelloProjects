@@ -12,9 +12,9 @@ public enum ErrorCode {
     ALREADY_ACTIVATED_WORKSPACE(HttpStatus.BAD_REQUEST, "w003", "이미 활성화된 워크스페이스입니다."),
     ;
 
-    private HttpStatus httpStatus;
-    private String code;
-    private String message;
+    private final HttpStatus httpStatus;
+    private final String code;
+    private final String message;
 
     ErrorCode(HttpStatus httpStatus, String code, String message) {
         this.httpStatus = httpStatus;
