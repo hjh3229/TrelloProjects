@@ -12,30 +12,36 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/workspace")
+@RequestMapping("/api/workspaces")
 public class WorkspaceController {
 
     private final WorkspaceService workspaceService;
 
     @PostMapping
-    public ResponseEntity<WorkspaceResponseDto> createWorkspace(CreateWorkspaceRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<WorkspaceResponseDto> createWorkspace(@RequestBody CreateWorkspaceRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         WorkspaceResponseDto responseDto = workspaceService.createWorkspace(requestDto, userDetails.getUser());
         return ResponseEntity.ok(responseDto);
     }
 
+    @GetMapping("/{workspaceId}")
+    public ResponseEntity<WorkspaceResponseDto> getWorkspace(@PathVariable Long workspaceId) {
+        WorkspaceResponseDto responseDto = workspaceService.getWorkspace(workspaceId);
+        return ResponseEntity.ok(responseDto);
+    }
+
     @PutMapping("/{workspaceId}")
-    public ResponseEntity<WorkspaceResponseDto> updateWorkspace(@PathVariable Long workspaceId, UpdateWorkspaceRequestDto requestDto) {
+    public ResponseEntity<WorkspaceResponseDto> updateWorkspace(@PathVariable Long workspaceId, @RequestBody UpdateWorkspaceRequestDto requestDto) {
         WorkspaceResponseDto responseDto = workspaceService.updateWorkspace(workspaceId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping("/{workspaceId}")
+    @PutMapping("/{workspaceId}/delete")
     public ResponseEntity<Void> deleteWorkspace(@PathVariable Long workspaceId) {
         workspaceService.deleteWorkspace(workspaceId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{workspaceId}")
+    @PutMapping("/{workspaceId}/reopen")
     public ResponseEntity<Void> reopenWorkspace(@PathVariable Long workspaceId) {
         workspaceService.reopenWorkspace(workspaceId);
         return ResponseEntity.ok().build();

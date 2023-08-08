@@ -27,6 +27,11 @@ public class WorkspaceService {
         return workspace.toDto();
     }
 
+    public WorkspaceResponseDto getWorkspace(Long id) {
+        Workspace workspace = findActiveWorkspace(id);
+        return workspace.toDto();
+    }
+
     @Transactional
     public WorkspaceResponseDto updateWorkspace(Long id, UpdateWorkspaceRequestDto requestDto) {
         Workspace workspace = findActiveWorkspace(id);
@@ -40,20 +45,34 @@ public class WorkspaceService {
         workspace.delete();
     }
 
-    private Workspace findActiveWorkspace(Long id) {
-        return workspaceRepository.findByIdAndStatus(id, WorkspaceStatus.ACTIVE)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("존재하지 않는 워크스페이스입니다."));
-    }
-
-    private Workspace findDeletedWorkspace(Long id) {
-        return workspaceRepository.findByIdAndStatus(id, WorkspaceStatus.DELETED)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("존재하지 않는 워크스페이스입니다."));
-    }
-
+    @Transactional
     public void reopenWorkspace(Long id) {
         Workspace workspace = findDeletedWorkspace(id);
         workspace.reopen();
+    }
+
+    private Workspace findActiveWorkspace(Long id) {
+        Workspace workspace = findWorkspace(id);
+
+        if (workspace.getStatus() == WorkspaceStatus.DELETED) {
+            throw new IllegalArgumentException("삭제된 워크스페이스에 접근할 수 없습니다.");
+        }
+
+        return workspace;
+    }
+
+    private Workspace findDeletedWorkspace(Long id) {
+        Workspace workspace = findWorkspace(id);
+
+        if (workspace.getStatus() == WorkspaceStatus.ACTIVE) {
+            throw new IllegalArgumentException("이미 활성화된 워크스페이스입니다.");
+        }
+
+        return workspace;
+    }
+
+    private Workspace findWorkspace(Long id) {
+        return workspaceRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않는 워크스페이스입니다."));
     }
 }
