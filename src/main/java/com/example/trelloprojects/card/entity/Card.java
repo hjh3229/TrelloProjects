@@ -3,6 +3,7 @@ package com.example.trelloprojects.card.entity;
 import com.example.trelloprojects.card.dto.CardRequestDto;
 import com.example.trelloprojects.columns.entity.Columns;
 import com.example.trelloprojects.comment.entity.Comment;
+import com.example.trelloprojects.user_card.entity.UserCard;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,6 +52,9 @@ public class Card {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
+    private List<UserCard> userCards = new ArrayList<>();
 
     public Card(CardRequestDto requestDto, Columns columns) {
         this.title = requestDto.getTitle();
