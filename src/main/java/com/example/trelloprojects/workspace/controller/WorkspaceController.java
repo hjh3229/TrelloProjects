@@ -41,12 +41,12 @@ public class WorkspaceController {
     @PutMapping("/{workspaceId}/delete")
     public ResponseEntity<MsgResponseDto> deleteWorkspace(@PathVariable Long workspaceId) {
         workspaceService.deleteWorkspace(workspaceId);
-        return ResponseEntity.ok().body(new MsgResponseDto("워크스페이스 삭제 성공", HttpStatus.OK.value()));
+        return ResponseEntity.ok(new MsgResponseDto("워크스페이스 삭제 성공", HttpStatus.OK.value()));
     }
 
     @PutMapping("/{workspaceId}/reopen")
     public ResponseEntity<MsgResponseDto> reopenWorkspace(@PathVariable Long workspaceId) {
         workspaceService.reopenWorkspace(workspaceId);
-        return ResponseEntity.ok().body(new MsgResponseDto("워크스페이스 복원 성공", HttpStatus.OK.value()));
+        return ResponseEntity.ok(new MsgResponseDto("워크스페이스 복원 성공", HttpStatus.OK.value()));
     }
 }

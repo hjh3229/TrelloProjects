@@ -7,6 +7,7 @@ import com.example.trelloprojects.member.dto.MemberResponseDto;
 import com.example.trelloprojects.member.dto.RemoveMemberRequestDto;
 import com.example.trelloprojects.member.service.MemberService;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +30,14 @@ public class MemberController {
     }
 
     @PostMapping("/invite")
-    public ResponseEntity<MsgResponseDto> inviteMember(@PathVariable Long workspaceId, @RequestBody InviteMemberRequestDto requestDto) throws MessagingException {
+    public ResponseEntity<MsgResponseDto> inviteMember(@PathVariable Long workspaceId,
+                                                       @RequestBody @Valid InviteMemberRequestDto requestDto) throws MessagingException {
         memberService.inviteMember(workspaceId, requestDto);
         return ResponseEntity.ok(new MsgResponseDto("워크스페이스 멤버 초대 성공", HttpStatus.OK.value()));
     }
 
     @PostMapping("/remove")
-    public ResponseEntity<MsgResponseDto> removeMember(@PathVariable Long workspaceId, @RequestBody RemoveMemberRequestDto requestDto) {
+    public ResponseEntity<MsgResponseDto> removeMember(@PathVariable Long workspaceId, @RequestBody @Valid RemoveMemberRequestDto requestDto) {
         memberService.removeMember(workspaceId, requestDto);
         return ResponseEntity.ok(new MsgResponseDto("워크스페이스 멤버 삭제 성공", HttpStatus.OK.value()));
     }
