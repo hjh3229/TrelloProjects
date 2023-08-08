@@ -76,7 +76,7 @@ public class MemberService {
     @Transactional
     public void joinWorkspace(Long id, String inviteCode, User user) {
         Workspace workspace = findActiveWorkspace(id);
-        Invitation invitation = validateAndRetrieveInvitation(inviteCode);
+        Invitation invitation = findPendingInvitation(inviteCode);
         invitation.markAsAccepted();
 
         UserWorkspace userWorkspace = new UserWorkspace(user, workspace);
@@ -155,7 +155,7 @@ public class MemberService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_DOES_NOT_BELONG_TO_WORKSPACE));
     }
 
-    private Invitation validateAndRetrieveInvitation(String inviteCode) {
+    private Invitation findPendingInvitation(String inviteCode) {
         return invitationRepository.findByInviteCodeAndStatus(inviteCode, InvitationStatus.PENDING)
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INVITE_CODE));
     }
