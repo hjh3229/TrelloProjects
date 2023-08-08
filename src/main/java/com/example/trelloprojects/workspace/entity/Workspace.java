@@ -1,21 +1,15 @@
 package com.example.trelloprojects.workspace.entity;
 
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.trelloprojects.workspace.dto.UpdateWorkspaceRequestDto;
+import com.example.trelloprojects.workspace.dto.WorkspaceResponseDto;
+import com.example.trelloprojects.workspace.enums.WorkspaceStatus;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Entity
 @Getter
-@Setter
-@Table(name = "workspace")
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Workspace {
 
@@ -23,10 +17,38 @@ public class Workspace {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    String name;
+    @Column(nullable = false)
+    private String name;
 
     @Column
-    String description;
+    private String description;
 
+    @Enumerated(EnumType.STRING)
+    private WorkspaceStatus status = WorkspaceStatus.ACTIVE;
+
+    public Workspace(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public void update(UpdateWorkspaceRequestDto requestDto) {
+        this.name = requestDto.getName();
+        this.description = requestDto.getDescription();
+    }
+
+    public void delete() {
+        this.status = WorkspaceStatus.DELETED;
+    }
+
+    public void reopen() {
+        this.status = WorkspaceStatus.ACTIVE;
+    }
+
+    public WorkspaceResponseDto toDto() {
+        return WorkspaceResponseDto.builder()
+                .id(this.id)
+                .name(this.name)
+                .description(this.description)
+                .build();
+    }
 }

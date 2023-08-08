@@ -31,9 +31,8 @@ public class Columns {
     @Column
     private String name;
 
-//    @jakarta.persistence.Column
-//    @OrderColumn(name = "POSITION")
-//    private List<Long> position = new ArrayList<>();
+    @Column
+    private Long position;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
@@ -42,13 +41,18 @@ public class Columns {
     @OneToMany(mappedBy = "columns")
     private List<Card> cardList = new ArrayList<>();
 
-    public Columns(AddColumnsRequest request, Board board) {
+    public Columns(AddColumnsRequest request, Long position, Board board) {
         this.name = request.getName();
+        this.position = position;
         this.board = board;
     }
 
     public Columns update(UpdateColumnsRequest request) {
         this.name = request.getName();
         return this;
+    }
+
+    public void setPosition(Long position) {
+        this.position = position;
     }
 }
