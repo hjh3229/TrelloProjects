@@ -1,5 +1,6 @@
 package com.example.trelloprojects.workspace.controller;
 
+import com.example.trelloprojects.common.dto.MsgResponseDto;
 import com.example.trelloprojects.user.entity.UserDetailsImpl;
 import com.example.trelloprojects.workspace.dto.CreateWorkspaceRequestDto;
 import com.example.trelloprojects.workspace.dto.UpdateWorkspaceRequestDto;
@@ -7,6 +8,7 @@ import com.example.trelloprojects.workspace.dto.WorkspaceResponseDto;
 import com.example.trelloprojects.workspace.service.WorkspaceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -37,14 +39,14 @@ public class WorkspaceController {
     }
 
     @PutMapping("/{workspaceId}/delete")
-    public ResponseEntity<Void> deleteWorkspace(@PathVariable Long workspaceId) {
+    public ResponseEntity<MsgResponseDto> deleteWorkspace(@PathVariable Long workspaceId) {
         workspaceService.deleteWorkspace(workspaceId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(new MsgResponseDto("워크스페이스 삭제 성공", HttpStatus.OK.value()));
     }
 
     @PutMapping("/{workspaceId}/reopen")
-    public ResponseEntity<Void> reopenWorkspace(@PathVariable Long workspaceId) {
+    public ResponseEntity<MsgResponseDto> reopenWorkspace(@PathVariable Long workspaceId) {
         workspaceService.reopenWorkspace(workspaceId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(new MsgResponseDto("워크스페이스 복원 성공", HttpStatus.OK.value()));
     }
 }
