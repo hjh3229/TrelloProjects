@@ -1,8 +1,10 @@
 package com.example.trelloprojects.card.entity;
 
+import com.example.trelloprojects.board.entity.Board;
 import com.example.trelloprojects.card.dto.CardRequestDto;
 import com.example.trelloprojects.colum.entity.Colum;
 
+import com.example.trelloprojects.comment.entity.Comment;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -42,6 +44,10 @@ public class Card {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     public Card(CardRequestDto requestDto, Colum colum) {
         this.title = requestDto.getTitle();

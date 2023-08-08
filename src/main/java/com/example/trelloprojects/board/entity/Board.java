@@ -17,7 +17,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "board")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
@@ -40,7 +39,7 @@ public class Board {
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Card> cardList = new ArrayList<>();
 
     public Board(BoardRequestDto requestDto){
