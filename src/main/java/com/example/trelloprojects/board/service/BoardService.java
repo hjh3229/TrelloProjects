@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,51 +22,50 @@ import java.util.List;
 @AllArgsConstructor
 @Transactional
 public class BoardService {
-
     private final BoardRepository boardRepository;
 
-    public void createBoard(BoardRequestDto requestDto) {
+    public BoardResponseDto createBoard(@RequestBody BoardRequestDto requestDto) {
         Board board = new Board(requestDto);
         boardRepository.save(board);
+        return new BoardResponseDto(board);
     }
 
-    public BoardResponseDto getOneBoard(Long id) {
-      Board board =   boardRepository.findById(id).orElseThrow(
-              ()->new IllegalArgumentException()
-      );
-         return new BoardResponseDto(board);
+    public BoardResponseDto getOneBoard(@RequestParam Long id) {
+        Board board =   boardRepository.findById(id).orElseThrow(
+                ()->new IllegalArgumentException()
+        );
+        return new BoardResponseDto(board);
     }
 
 
-    public ResponseEntity<ApiResponseDto> changeBoardName(Long id, BoardRequestDto requestDto) {
+    public BoardResponseDto changeBoardName(@RequestParam Long id,@RequestBody BoardRequestDto requestDto) {
         Board board =   boardRepository.findById(id).orElseThrow(
                 ()->new IllegalArgumentException()
         );
 
-       board.updateName(requestDto);
+        System.out.println(requestDto.getName());
+        board.updateName(requestDto);
+        System.out.println(board.getName());
 
-        ApiResponseDto apiResponseDto = new ApiResponseDto("이름이 변경되었습니다.", HttpStatus.OK.value());
-        return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
+        return new BoardResponseDto(board);
     }
 
-    public ResponseEntity<ApiResponseDto> changeBoardDescription(Long id, BoardRequestDto requestDto) {
+    public BoardResponseDto changeBoardDescription(@RequestParam Long id,@RequestBody BoardRequestDto requestDto) {
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException()
         );
         board.updateDescription(requestDto);
 
-        ApiResponseDto apiResponseDto = new ApiResponseDto("설명이 변경되었습니다.", HttpStatus.OK.value());
-        return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
+        return new BoardResponseDto(board);
     }
 
-    public ResponseEntity<ApiResponseDto> deleteBoard(Long id) {
+    public void deleteBoard(@RequestParam Long id) {
         Board board =   boardRepository.findById(id).orElseThrow(
                 ()->new IllegalArgumentException()
         );
         boardRepository.delete(board);
-        ApiResponseDto apiResponseDto = new ApiResponseDto("보드가 삭제되었습니다.", HttpStatus.OK.value());
-        return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
     }
+
 
     }
 
