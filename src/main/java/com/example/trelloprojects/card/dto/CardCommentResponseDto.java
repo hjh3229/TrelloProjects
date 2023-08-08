@@ -13,6 +13,6 @@ public class CardCommentResponseDto {
   private List<CommentResponseDto> comments;
 
   public CardCommentResponseDto(Card card) {
-    this.comments = card.getComments().stream().map((Comment comment) -> new CommentResponseDto(comment)).toList();
+    this.comments = card.getComments().stream().map(CommentResponseDto::new).toList();
   }
 }
