@@ -6,7 +6,7 @@ import com.example.trelloprojects.columns.dto.AddColumnsRequest;
 import com.example.trelloprojects.columns.dto.ReorderRequest;
 import com.example.trelloprojects.columns.dto.UpdateColumnsRequest;
 import com.example.trelloprojects.columns.entity.Columns;
-import com.example.trelloprojects.columns.service.ColumnsService;
+import com.example.trelloprojects.columns.service.impl.ColumnsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,24 +23,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ColumnsController {
 
-    private final ColumnsService columnsService;
+    private final ColumnsServiceImpl columnsServiceImpl;
     private final CardService cardService;
 
     @PostMapping("/column/{boardId}")
     public ResponseEntity<Columns> addColumns(@PathVariable Long boardId,
             @RequestBody AddColumnsRequest request) {
-        return ResponseEntity.ok().body(columnsService.addColumns(boardId, request));
+        return ResponseEntity.ok().body(columnsServiceImpl.addColumns(boardId, request));
     }
 
     @PutMapping("/column/{columnId}")
     public ResponseEntity<Columns> updateColumns(@PathVariable Long columnId,
             @RequestBody UpdateColumnsRequest request) {
-        return ResponseEntity.ok().body(columnsService.updateColumns(columnId, request));
+        return ResponseEntity.ok().body(columnsServiceImpl.updateColumns(columnId, request));
     }
 
     @DeleteMapping("/column/{columnId}")
     public ResponseEntity<Void> deleteColumns(@PathVariable Long columnId) {
-        columnsService.deleteColumns(columnId);
+        columnsServiceImpl.deleteColumns(columnId);
         return ResponseEntity.ok().build();
     }
 
@@ -52,7 +52,7 @@ public class ColumnsController {
     @PutMapping("/column/{columnId}/reorder")
     public ResponseEntity<Void> reorder(@PathVariable Long columnId,
             @RequestBody ReorderRequest request) {
-        columnsService.reorder(columnId, request);
+        columnsServiceImpl.reorder(columnId, request);
         return ResponseEntity.ok().build();
     }
 
