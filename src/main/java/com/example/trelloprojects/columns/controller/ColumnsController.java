@@ -1,11 +1,12 @@
 package com.example.trelloprojects.columns.controller;
 
+import com.example.trelloprojects.card.dto.CardResponseDto;
+import com.example.trelloprojects.card.service.CardService;
 import com.example.trelloprojects.columns.dto.AddColumnsRequest;
-import com.example.trelloprojects.columns.dto.ColumnsResponse;
+import com.example.trelloprojects.columns.dto.ReorderRequest;
 import com.example.trelloprojects.columns.dto.UpdateColumnsRequest;
 import com.example.trelloprojects.columns.entity.Columns;
 import com.example.trelloprojects.columns.service.ColumnsService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ColumnsController {
 
     private final ColumnsService columnsService;
+    private final CardService cardService;
 
     @PostMapping("/column/{boardId}")
     public ResponseEntity<Columns> addColumns(@PathVariable Long boardId,
@@ -42,9 +44,16 @@ public class ColumnsController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/column/")
-    public ResponseEntity<List<ColumnsResponse>> getColumns() {
-        return ResponseEntity.ok().body(columnsService.getColumns());
+    @GetMapping("/column/card/{cardId}")
+    public ResponseEntity<CardResponseDto> getCard(@PathVariable Long cardId) {
+        return ResponseEntity.ok().body(new CardResponseDto(cardService.findCard(cardId)));
+    }
+
+    @PostMapping("/column/{cardId}/reorder")
+    public ResponseEntity<Void> reorder(@PathVariable Long cardId,
+            @RequestBody ReorderRequest request) {
+        columnsService.reorder(cardId, request);
+        return ResponseEntity.ok().build();
     }
 
 

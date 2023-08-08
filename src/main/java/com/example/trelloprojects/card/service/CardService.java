@@ -36,7 +36,7 @@ public class CardService {
         return new CardCommentResponseDto(findCard(cardId));
     }
 
-    private Card findCard(Long cardId) {
+    public Card findCard(Long cardId) {
         return cardRepository.findById(cardId).orElseThrow(() ->
                 new IllegalArgumentException("존재하지 않는 카드입니다.")
         );
