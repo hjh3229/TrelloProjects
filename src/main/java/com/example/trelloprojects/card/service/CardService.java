@@ -71,6 +71,11 @@ public class CardService {
         }
     }
 
+    public void deleteCard(Long cardId) {
+        Card card = findCard(cardId);
+        cardRepository.delete(card);
+    }
+
     private Columns findColumn(Long columnId) {
         return columRepository.findById(columnId).orElseThrow(() ->
             new IllegalArgumentException("존재하지 않는 컬럼입니다.")
@@ -88,4 +93,6 @@ public class CardService {
             new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
     }
+
+
 }

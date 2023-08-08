@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,6 +62,12 @@ public class CardController {
   public ResponseEntity<MsgResponseDto> setMember(@RequestParam String username, @RequestParam Long cardId) {
     cardService.setMember(username, cardId);
     return ResponseEntity.ok().body(new MsgResponseDto("작업자 할당/취소 성공", HttpStatus.OK.value()));
+  }
+
+  @DeleteMapping("/card/{cardId}")
+  public ResponseEntity<MsgResponseDto> deleteCard(@PathVariable Long cardId) {
+    cardService.deleteCard(cardId);
+    return ResponseEntity.ok().body(new MsgResponseDto("카드 삭제 성공", HttpStatus.OK.value()));
   }
 
 }
