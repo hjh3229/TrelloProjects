@@ -2,12 +2,12 @@ package com.example.trelloprojects.board.entity;
 
 import com.example.trelloprojects.board.dto.ApiResponseDto;
 import com.example.trelloprojects.board.dto.BoardRequestDto;
-import com.example.trelloprojects.card.entity.Card;
 import com.example.trelloprojects.workspace.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -16,6 +16,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "board")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
