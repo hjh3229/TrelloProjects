@@ -2,6 +2,7 @@ package com.example.trelloprojects.board.entity;
 
 import com.example.trelloprojects.board.dto.ApiResponseDto;
 import com.example.trelloprojects.board.dto.BoardRequestDto;
+import com.example.trelloprojects.card.entity.Card;
 import com.example.trelloprojects.workspace.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
