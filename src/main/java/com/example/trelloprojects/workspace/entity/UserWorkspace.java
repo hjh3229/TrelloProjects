@@ -1,0 +1,28 @@
+package com.example.trelloprojects.workspace.entity;
+
+import com.example.trelloprojects.user.entity.User;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class UserWorkspace {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Workspace workspace;
+
+    public UserWorkspace(User user, Workspace workspace) {
+        this.user = user;
+        this.workspace = workspace;
+    }
+}
