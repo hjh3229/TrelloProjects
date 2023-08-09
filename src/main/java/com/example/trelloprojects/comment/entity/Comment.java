@@ -1,12 +1,21 @@
 package com.example.trelloprojects.comment.entity;
 
 import com.example.trelloprojects.card.entity.Card;
+import com.example.trelloprojects.comment.dto.CommentRequestDto;
 import com.example.trelloprojects.user.entity.User;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -31,4 +40,10 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
     private Card card;
+
+    public Comment(CommentRequestDto requestDto, User user, Card card) {
+        this.content = requestDto.getContent();
+        this.user = user;
+        this.card = card;
+    }
 }

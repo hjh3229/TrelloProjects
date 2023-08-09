@@ -2,7 +2,14 @@ package com.example.trelloprojects.board.entity;
 
 import com.example.trelloprojects.board.dto.ApiResponseDto;
 import com.example.trelloprojects.board.dto.BoardRequestDto;
+
 import com.example.trelloprojects.card.entity.Card;
+
+
+import com.example.trelloprojects.board.dto.BoardResponseDto;
+
+import com.example.trelloprojects.common.entity.ColorEnum;
+
 import com.example.trelloprojects.workspace.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -39,6 +46,7 @@ public class Board {
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
 
+
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Card> cardList = new ArrayList<>();
 
@@ -49,15 +57,21 @@ public class Board {
         this.workspace=requestDto.getWorkspace();
     }
 
-
-    public ResponseEntity<ApiResponseDto> updateName(BoardRequestDto requestDto) {
-        this.name= requestDto.getName();
-        ApiResponseDto apiResponseDto = new ApiResponseDto( "이름이 변경되었습니다.", HttpStatus.OK.value());
-        return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
+    public BoardResponseDto toDto() {
+        return BoardResponseDto.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .color(color)
+                .build();
     }
-    public  ResponseEntity<ApiResponseDto> updateDescription(BoardRequestDto requestDto) {
-        this.description= requestDto.getDescription();
-        ApiResponseDto apiResponseDto = new ApiResponseDto( "설명이 변경되었습니다.", HttpStatus.OK.value());
-        return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
+
+
+    public void updateName(BoardRequestDto requestDto) {
+        this.name = requestDto.getName();
+    }
+
+    public void updateDescription(BoardRequestDto requestDto) {
+        this.description = requestDto.getDescription();
     }
 }
