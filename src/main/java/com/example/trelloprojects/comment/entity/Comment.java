@@ -19,6 +19,7 @@ import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "comment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {

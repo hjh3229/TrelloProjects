@@ -2,13 +2,6 @@ package com.example.trelloprojects.card.entity;
 
 import com.example.trelloprojects.board.entity.Board;
 import com.example.trelloprojects.card.dto.CardRequestDto;
-
-import com.example.trelloprojects.colum.entity.Colum;
-
-import com.example.trelloprojects.comment.entity.Comment;
-import jakarta.persistence.*;
-
-
 import com.example.trelloprojects.columns.entity.Columns;
 import com.example.trelloprojects.comment.entity.Comment;
 import com.example.trelloprojects.common.entity.ColorEnum;
@@ -24,7 +17,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
