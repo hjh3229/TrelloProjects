@@ -7,7 +7,9 @@ import com.example.trelloprojects.columns.dto.ReorderRequest;
 import com.example.trelloprojects.columns.dto.UpdateColumnsRequest;
 import com.example.trelloprojects.columns.entity.Columns;
 import com.example.trelloprojects.columns.service.impl.ColumnsServiceImpl;
+import com.example.trelloprojects.common.dto.MsgResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,9 +41,9 @@ public class ColumnsController {
     }
 
     @DeleteMapping("/column/{columnId}")
-    public ResponseEntity<Void> deleteColumns(@PathVariable Long columnId) {
+    public ResponseEntity<MsgResponseDto> deleteColumns(@PathVariable Long columnId) {
         columnsServiceImpl.deleteColumns(columnId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(new MsgResponseDto("컬럼 삭제 성공", HttpStatus.OK.value()));
     }
 
     @GetMapping("/column/card/{cardId}")
@@ -50,10 +52,10 @@ public class ColumnsController {
     }
 
     @PutMapping("/column/{columnId}/reorder")
-    public ResponseEntity<Void> reorder(@PathVariable Long columnId,
+    public ResponseEntity<MsgResponseDto> reorder(@PathVariable Long columnId,
             @RequestBody ReorderRequest request) {
         columnsServiceImpl.reorder(columnId, request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(new MsgResponseDto("컬럼 순서 재정렬", HttpStatus.OK.value()));
     }
 
 }

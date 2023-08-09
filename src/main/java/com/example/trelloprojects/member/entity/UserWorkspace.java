@@ -1,12 +1,14 @@
-package com.example.trelloprojects.workspace.entity;
+package com.example.trelloprojects.member.entity;
 
 import com.example.trelloprojects.user.entity.User;
+import com.example.trelloprojects.workspace.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Table(name = "user_workspace")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserWorkspace {

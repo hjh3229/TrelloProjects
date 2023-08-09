@@ -1,6 +1,7 @@
 package com.example.trelloprojects.card.service;
 
 import com.example.trelloprojects.card.dto.CardCommentResponseDto;
+import com.example.trelloprojects.card.dto.CardReorderRequestDto;
 import com.example.trelloprojects.card.dto.CardRequestDto;
 import com.example.trelloprojects.card.dto.CardResponseDto;
 import com.example.trelloprojects.card.entity.Card;
@@ -29,7 +30,8 @@ public class CardService {
 
     public CardResponseDto createCard(CardRequestDto requestDto, Long columnId) {
         Columns colum = findColumn(columnId);
-        Card card = cardRepository.save(new Card(requestDto, colum));
+        Long position = cardRepository.countCardsByColumns(colum);
+        Card card = cardRepository.save(new Card(requestDto, colum, position));
         return new CardResponseDto(card);
     }
 
@@ -79,21 +81,55 @@ public class CardService {
 
     private Columns findColumn(Long columnId) {
         return columRepository.findById(columnId).orElseThrow(() ->
-            new IllegalArgumentException("존재하지 않는 컬럼입니다.")
+                new IllegalArgumentException("존재하지 않는 컬럼입니다.")
         );
     }
 
     public Card findCard(Long cardId) {
         return cardRepository.findById(cardId).orElseThrow(() ->
-            new IllegalArgumentException("존재하지 않는 카드입니다.")
+                new IllegalArgumentException("존재하지 않는 카드입니다.")
         );
     }
 
     private User findUser(String username) {
         return userRepository.findByUsername(username).orElseThrow(() ->
-            new IllegalArgumentException("존재하지 않는 유저입니다.")
+                new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
     }
 
+    //TO DO
+    public void reorderCard(Long cardId, Long columnsId, CardReorderRequestDto reorderRequestDto) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(IllegalArgumentException::new);
 
+        Columns columns = card.getColumns();
+        Long oldPosition = card.getPosition();
+        Long newPosition = reorderRequestDto.getPosition();
+
+        if (columns.getId().equals(columnsId)) {
+
+            if (newPosition > oldPosition) {
+                cardRepository.decrementAboveToPosition(newPosition, oldPosition,
+                        String.valueOf(columns.getId()));
+            } else {
+                cardRepository.incrementBelowToPosition(newPosition, oldPosition,
+                        String.valueOf(columns.getId()));
+            }
+
+            card.setPosition(reorderRequestDto.getPosition());
+            cardRepository.save(card);
+
+        } else {
+
+            Columns requestcolumns = columRepository.findById(columnsId).orElse(null);
+
+            cardRepository.decrementBelow(card.getPosition(), String.valueOf(columns.getId()));
+
+            Long position = cardRepository.countCardsByColumns(requestcolumns);
+            card.setPosition(position);
+            card.setColumns(requestcolumns);
+
+            cardRepository.save(card);
+        }
+    }
 }

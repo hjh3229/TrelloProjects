@@ -1,8 +1,17 @@
 package com.example.trelloprojects.card.entity;
 
+import com.example.trelloprojects.board.entity.Board;
 import com.example.trelloprojects.card.dto.CardRequestDto;
+
+import com.example.trelloprojects.colum.entity.Colum;
+
+import com.example.trelloprojects.comment.entity.Comment;
+import jakarta.persistence.*;
+
+
 import com.example.trelloprojects.columns.entity.Columns;
 import com.example.trelloprojects.comment.entity.Comment;
+import com.example.trelloprojects.common.entity.ColorEnum;
 import com.example.trelloprojects.user_card.entity.UserCard;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,6 +24,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +51,13 @@ public class Card {
     String description;
 
     @Column
-    String color;
+    ColorEnum color;
 
     @Column
     LocalDateTime deadLine;
+
+    @Column
+    private Long position;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "column_id")
@@ -53,14 +66,19 @@ public class Card {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "board_id")
+    private Board board;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
     private List<UserCard> userCards = new ArrayList<>();
 
-    public Card(CardRequestDto requestDto, Columns columns) {
+    public Card(CardRequestDto requestDto, Columns columns, Long position) {
         this.title = requestDto.getTitle();
         this.description = requestDto.getDescription();
         this.color = requestDto.getColor();
         this.deadLine = requestDto.getDeadLine();
         this.columns = columns;
+        this.position = position;
     }
 }
