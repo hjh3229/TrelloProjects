@@ -1,6 +1,8 @@
 package com.example.trelloprojects.user.entity;
 
 
+import com.example.trelloprojects.user.dto.AddUserRequest;
+import com.example.trelloprojects.user.dto.UpdateEmailRequest;
 import com.example.trelloprojects.user_card.entity.UserCard;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -46,4 +48,15 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserCard> userCards = new ArrayList<>();
+
+    public User(AddUserRequest request, String password) {
+        this.username = request.getUsername();
+        this.password = password;
+        this.email = request.getEmail();
+        this.role = UserRoleEnum.USER;
+    }
+
+    public void updateEmail(UpdateEmailRequest request) {
+        this.email = request.getEmail();
+    }
 }
