@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Table(name = "workspace")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Workspace {

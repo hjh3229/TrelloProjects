@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Table(name = "user_workspace")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserWorkspace {

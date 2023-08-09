@@ -1,6 +1,10 @@
 package com.example.trelloprojects.board.entity;
 
+import com.example.trelloprojects.board.dto.ApiResponseDto;
 import com.example.trelloprojects.board.dto.BoardRequestDto;
+
+import com.example.trelloprojects.card.entity.Card;
+
 
 import com.example.trelloprojects.board.dto.BoardResponseDto;
 
@@ -12,10 +16,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "board")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
@@ -38,10 +46,15 @@ public class Board {
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
 
-    public Board(BoardRequestDto requestDto) {
-        this.name = requestDto.getName();
-        this.description = requestDto.getDescription();
-        this.color = requestDto.getColor();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Card> cardList = new ArrayList<>();
+
+    public Board(BoardRequestDto requestDto){
+        this.name=requestDto.getName();
+        this.description= requestDto.getDescription();
+        this.color=requestDto.getColor();
+        this.workspace=requestDto.getWorkspace();
     }
 
     public BoardResponseDto toDto() {
@@ -52,6 +65,7 @@ public class Board {
                 .color(color)
                 .build();
     }
+
 
     public void updateName(BoardRequestDto requestDto) {
         this.name = requestDto.getName();
