@@ -4,7 +4,10 @@ package com.example.trelloprojects.board.controller;
 import com.example.trelloprojects.board.dto.BoardRequestDto;
 import com.example.trelloprojects.board.dto.BoardResponseDto;
 import com.example.trelloprojects.board.service.BoardService;
+import com.example.trelloprojects.common.dto.MsgResponseDto;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -17,34 +20,36 @@ public class BoardController {
     //shift + f6
     //Board 생성
     @PostMapping
-    public BoardResponseDto createBoard(@RequestBody BoardRequestDto requestDto){
+    public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto requestDto){
         String name= requestDto.getName();
-        return boardService.createBoard(requestDto);}
+        return ResponseEntity.ok().body(boardService.createBoard(requestDto));
+    }
 
     //특정 Board 조회-> board 안에 모든 컬럼이 보이는 것으로
     @GetMapping("/board")
-    public BoardResponseDto getOneBoard(@RequestParam Long id){
-        return boardService.getOneBoard(id);
-        }
+    public ResponseEntity<BoardResponseDto> getOneBoard(@RequestParam Long id){
+        return ResponseEntity.ok().body(boardService.getOneBoard(id));
+    }
 
     //BoardName 변경
     @PutMapping("/board/{board_id}")
 
-    public BoardResponseDto changeBoardName(@RequestParam Long id, @RequestBody BoardRequestDto requestDto){
-        return boardService.changeBoardName(id,requestDto);
+    public ResponseEntity<BoardResponseDto> changeBoardName(@RequestParam Long id, @RequestBody BoardRequestDto requestDto){
+        return ResponseEntity.ok().body(boardService.changeBoardName(id,requestDto));
     }
 
     //BoardDescription 변경
     @PutMapping
-    public BoardResponseDto changeBoardDescription(@RequestParam Long id, @RequestBody BoardRequestDto requestDto){
-        return boardService.changeBoardDescription(id,requestDto);
+    public ResponseEntity<BoardResponseDto> changeBoardDescription(@RequestParam Long id, @RequestBody BoardRequestDto requestDto){
+        return ResponseEntity.ok().body(boardService.changeBoardDescription(id,requestDto));
     }
 
     //Board 삭제
     @DeleteMapping
-    public void deleteBoard(Long id){
+    public ResponseEntity<MsgResponseDto> deleteBoard(Long id) {
         boardService.deleteBoard(id);
+        return ResponseEntity.ok().body(new MsgResponseDto("보드 삭제 성공", HttpStatus.OK.value()));
     }
-    }
+}
 
 
