@@ -30,9 +30,9 @@ public class UserService {
 
     //To Do encode password
     @Transactional
-    public User signUp(AddUserRequest request) {
+    public void signUp(AddUserRequest request) {
         String password = passwordEncoder.encode(request.getPassword());
-        return userRepository.save(new User(request, password));
+        userRepository.save(new User(request, password));
     }
 
     @Transactional

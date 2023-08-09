@@ -22,19 +22,19 @@ public class ColumnsServiceImpl implements ColumnsService {
 
     @Transactional
     @Override
-    public Columns addColumns(Long boardId, AddColumnsRequest request) {
+    public void addColumns(Long boardId, AddColumnsRequest request) {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(
                 () -> new IllegalArgumentException("not found" + boardId)
         );
         Long position = columnsRepository.countColumnsByBoard(findBoard);
-        return columnsRepository.save(new Columns(request, position, findBoard));
+        columnsRepository.save(new Columns(request, position, findBoard));
     }
 
     @Transactional
     @Override
-    public Columns updateColumns(Long columnId, UpdateColumnsRequest request) {
+    public void updateColumns(Long columnId, UpdateColumnsRequest request) {
         Columns columns = findColumn(columnId);
-        return columns.update(request);
+        columns.update(request);
     }
 
     @Transactional

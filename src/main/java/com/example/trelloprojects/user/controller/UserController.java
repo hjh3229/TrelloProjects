@@ -1,5 +1,6 @@
 package com.example.trelloprojects.user.controller;
 
+import com.example.trelloprojects.common.dto.MsgResponseDto;
 import com.example.trelloprojects.user.dto.AddUserRequest;
 import com.example.trelloprojects.user.dto.LoginRequest;
 import com.example.trelloprojects.user.dto.UpdateEmailRequest;
@@ -25,23 +26,24 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<User> signUp(@RequestBody AddUserRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(request));
+    public ResponseEntity<MsgResponseDto> signUp(@RequestBody AddUserRequest request) {
+        userService.signUp(request);
+        return ResponseEntity.ok(new MsgResponseDto("회원가입 성공", HttpStatus.OK.value()));
     }
 
     @PostMapping("/log-in")
-    public ResponseEntity<Void> logIn(HttpServletResponse httpResponse,
+    public ResponseEntity<MsgResponseDto> logIn(HttpServletResponse httpResponse,
             @RequestBody LoginRequest request) throws Exception {
         userService.logIn(httpResponse, request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new MsgResponseDto("로그인 성공", HttpStatus.OK.value()));
     }
 
     @PutMapping("/email")
-    public ResponseEntity<Void> updateEmail(@RequestBody UpdateEmailRequest request,
+    public ResponseEntity<MsgResponseDto> updateEmail(@RequestBody UpdateEmailRequest request,
             @AuthenticationPrincipal
             UserDetailsImpl userDetails) {
         userService.updateEmail(request, userDetails);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new MsgResponseDto("이메일 수정 성공", HttpStatus.OK.value()));
     }
 
 }

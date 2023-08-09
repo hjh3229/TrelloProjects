@@ -17,14 +17,12 @@ public class BoardResponseDto {
     private String name;
     private String description;
     private ColorEnum color;
-    private Workspace workspace;
 
     public BoardResponseDto(Board board) {
         this.id = board.getId();
         this.name = board.getName();
         this.description = board.getDescription();
         this.color = board.getColor();
-        this.workspace = board.getWorkspace();
     }
 }
 
