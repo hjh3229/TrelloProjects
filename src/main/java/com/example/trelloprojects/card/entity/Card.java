@@ -3,6 +3,7 @@ package com.example.trelloprojects.card.entity;
 import com.example.trelloprojects.card.dto.CardRequestDto;
 import com.example.trelloprojects.columns.entity.Columns;
 import com.example.trelloprojects.comment.entity.Comment;
+import com.example.trelloprojects.common.entity.ColorEnum;
 import com.example.trelloprojects.user_card.entity.UserCard;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -41,7 +42,7 @@ public class Card {
     String description;
 
     @Column
-    String color;
+    ColorEnum color;
 
     @Column
     LocalDateTime deadLine;

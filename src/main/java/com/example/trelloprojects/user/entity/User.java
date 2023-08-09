@@ -1,8 +1,12 @@
 package com.example.trelloprojects.user.entity;
 
 
+
 import com.example.trelloprojects.user.dto.AddUserRequest;
 import com.example.trelloprojects.user.dto.UpdateEmailRequest;
+
+import com.example.trelloprojects.member.dto.MemberResponseDto;
+
 import com.example.trelloprojects.user_card.entity.UserCard;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -34,18 +38,18 @@ public class User {
     private Long id;
 
     @Column
-    String username;
+    private String username;
 
     @Column
-    String password;
+    private String password;
 
     @Column
-    String email;
+    private String email;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
-
+  
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserCard> userCards = new ArrayList<>();
 
@@ -58,5 +62,13 @@ public class User {
 
     public void updateEmail(UpdateEmailRequest request) {
         this.email = request.getEmail();
+    }
+    public MemberResponseDto toMemberResponseDto() {
+        return MemberResponseDto.builder()
+                .id(this.id)
+                .username(this.username)
+                .email(this.email)
+                .build();
+
     }
 }
