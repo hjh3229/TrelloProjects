@@ -1,6 +1,7 @@
-package com.example.trelloprojects.workspace.entity;
+package com.example.trelloprojects.member.entity;
 
 import com.example.trelloprojects.user.entity.User;
+import com.example.trelloprojects.workspace.entity.Workspace;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
