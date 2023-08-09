@@ -47,6 +47,9 @@ public class Card {
     @Column
     LocalDateTime deadLine;
 
+    @Column
+    private Long position;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "column_id")
     private Columns columns;
@@ -57,11 +60,12 @@ public class Card {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
     private List<UserCard> userCards = new ArrayList<>();
 
-    public Card(CardRequestDto requestDto, Columns columns) {
+    public Card(CardRequestDto requestDto, Columns columns, Long position) {
         this.title = requestDto.getTitle();
         this.description = requestDto.getDescription();
         this.color = requestDto.getColor();
         this.deadLine = requestDto.getDeadLine();
         this.columns = columns;
+        this.position = position;
     }
 }
