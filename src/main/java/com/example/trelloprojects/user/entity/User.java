@@ -71,4 +71,8 @@ public class User {
     public void updatePassword(String password) {
         this.password = password;
     }
+
+    public void updateRole() {
+        this.role = UserRoleEnum.WITHDRAW;
+    }
 }

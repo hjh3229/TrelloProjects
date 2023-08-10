@@ -53,4 +53,9 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/withdraw")
+    public ResponseEntity<Void> withdraw() {
+        return ResponseEntity.ok().build();
+    }
+
 }

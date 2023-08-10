@@ -42,7 +42,7 @@ public class securityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll()
                         .requestMatchers("/api/sign-up", "/api/log-in").permitAll()
-                        .anyRequest().authenticated());
+                        .anyRequest().hasRole("USER"));
         return http.build();
     }
 

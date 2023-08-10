@@ -4,11 +4,13 @@ package com.example.trelloprojects.user.service;
 import com.example.trelloprojects.common.error.BusinessException;
 import com.example.trelloprojects.common.error.ErrorCode;
 import com.example.trelloprojects.user.dto.AddUserRequest;
+import com.example.trelloprojects.user.dto.CheckPasswordRequest;
 import com.example.trelloprojects.user.dto.LoginRequest;
 import com.example.trelloprojects.user.dto.UpdateEmailRequest;
 import com.example.trelloprojects.user.dto.UpdatePasswordRequest;
 import com.example.trelloprojects.user.entity.User;
 import com.example.trelloprojects.user.entity.UserDetailsImpl;
+import com.example.trelloprojects.user.entity.UserRoleEnum;
 import com.example.trelloprojects.user.repository.UserRepository;
 import com.example.trelloprojects.user.security.TokenProvider;
 import jakarta.servlet.http.HttpServletResponse;
@@ -66,6 +68,18 @@ public class UserService {
         user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
     }
 
+    @Transactional
+    public void withDraw(CheckPasswordRequest request, UserDetailsImpl userDetails) {
+        User user = findUser(userDetails);
+
+        if (!passwordEncoder.matches(request.getPassword(), userDetails.getUser().getPassword())) {
+            throw new BusinessException(ErrorCode.PASSWORD_DO_NOT_MATCH);
+        }
+
+        user.updateRole();
+
+    }
+
     public User findUser(UserDetailsImpl userDetails) {
         return userRepository.findById(userDetails.getUser().getId()).orElseThrow(
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
@@ -73,16 +87,6 @@ public class UserService {
     }
 
     public void logIn(HttpServletResponse httpResponse, LoginRequest request) {
-        User checkUser = userRepository.findByEmail(request.getEmail());
-
-        if (checkUser != null) {
-            throw new BusinessException(ErrorCode.EMAIL_DO_NOT_MATCH);
-        }
-
-        if (!passwordEncoder.matches(request.getPassword(), request.getPassword())) {
-            throw new BusinessException(ErrorCode.PASSWORD_DO_NOT_MATCH);
-        }
-
         try {
             Authentication authentication = authenticationConfiguration.getAuthenticationManager()
                     .authenticate(
@@ -96,11 +100,15 @@ public class UserService {
 
             User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
 
+            if (user.getRole().equals(UserRoleEnum.WITHDRAW)) {
+                throw new BusinessException(ErrorCode.WITHDRAW_USER);
+            }
+
             httpResponse.addHeader(TokenProvider.HEADER_AUTHORIZATION,
                     tokenProvider.generateToken(user, Duration.ofHours(2)));
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new BusinessException(ErrorCode.BAD_ID_PASSWORD);
         }
 
     }
