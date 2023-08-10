@@ -15,8 +15,10 @@ public class WorkspaceActivationAspect {
 
     private final WorkspaceRepository workspaceRepository;
 
-    @Before("execution(* com.example.trelloprojects.member.service.MemberService.*(..)) || " +
-            "execution(* com.example.trelloprojects.workspace.service.WorkspaceService.*(..)) && args(workspaceId, ..)")
+    @Before("(execution(public * com.example.trelloprojects.member.service.*.*(..)) || " +
+            "execution(public * com.example.trelloprojects.workspace.service.*.*(..))) && " +
+            "!execution(public * com.example.trelloprojects.workspace.service.WorkspaceService.reopenWorkspace(Long)) && " +
+            "args(workspaceId, ..)")
     public void checkWorkspaceActivation(Long workspaceId) {
         Workspace workspace = workspaceRepository.findById(workspaceId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.WORKSPACE_NOT_FOUND));
