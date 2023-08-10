@@ -75,8 +75,20 @@ public class UserService {
             throw new BusinessException(ErrorCode.PASSWORD_DO_NOT_MATCH);
         }
 
-        user.updateRole();
+        user.updateRoleWithDraw();
+    }
 
+    @Transactional
+    public void activate(LoginRequest request) {
+
+        User checkUser = userRepository.findByEmail(request.getEmail());
+        String password = checkUser.getPassword();
+
+        if (!passwordEncoder.matches(request.getPassword(), password)) {
+            throw new BusinessException(ErrorCode.BAD_ID_PASSWORD);
+        }
+
+        checkUser.updateRoleUSER();
     }
 
     public User findUser(UserDetailsImpl userDetails) {
@@ -99,10 +111,6 @@ public class UserService {
 
             User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
 
-            if (user.getRole().equals(UserRoleEnum.WITHDRAW)) {
-                throw new BusinessException(ErrorCode.WITHDRAW_USER);
-            }
-
             httpResponse.addHeader(TokenProvider.HEADER_AUTHORIZATION,
                     tokenProvider.generateToken(user, Duration.ofHours(2)));
 
@@ -110,7 +118,9 @@ public class UserService {
             throw new BusinessException(ErrorCode.BAD_ID_PASSWORD);
         }
 
+        User checkUser = userRepository.findByEmail(request.getEmail());
+        if (checkUser.getRole().equals(UserRoleEnum.WITHDRAW)) {
+            throw new BusinessException(ErrorCode.WITHDRAW_USER);
+        }
     }
-
-
 }

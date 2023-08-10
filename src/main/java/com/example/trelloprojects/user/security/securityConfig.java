@@ -41,7 +41,7 @@ public class securityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                         .permitAll()
-                        .requestMatchers("/api/sign-up", "/api/log-in").permitAll()
+                        .requestMatchers("/api/sign-up", "/api/log-in", "/api/activate").permitAll()
                         .anyRequest().hasRole("USER"));
         return http.build();
     }
