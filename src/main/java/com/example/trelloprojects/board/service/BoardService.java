@@ -1,7 +1,7 @@
 package com.example.trelloprojects.board.service;
 
+import com.example.trelloprojects.board.dto.BoardColumnResponseDto;
 import com.example.trelloprojects.board.dto.BoardRequestDto;
-import com.example.trelloprojects.board.dto.BoardResponseDto;
 import com.example.trelloprojects.board.dto.UpdateBoardColor;
 import com.example.trelloprojects.board.dto.UpdateBoardDescription;
 import com.example.trelloprojects.board.dto.UpdateBoardName;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class BoardService {
-    
+
     private final BoardRepository boardRepository;
     private final WorkspaceRepository workspaceRepository;
 
@@ -32,9 +32,9 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public BoardResponseDto getOneBoard(Long id) {
+    public BoardColumnResponseDto getOneBoard(Long id) {
         Board board = findBoard(id);
-        return board.toDto();
+        return new BoardColumnResponseDto(board);
     }
 
     @Transactional

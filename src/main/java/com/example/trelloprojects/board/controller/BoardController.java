@@ -1,9 +1,8 @@
 package com.example.trelloprojects.board.controller;
 
 
-import com.example.trelloprojects.board.dto.ApiResponseDto;
+import com.example.trelloprojects.board.dto.BoardColumnResponseDto;
 import com.example.trelloprojects.board.dto.BoardRequestDto;
-import com.example.trelloprojects.board.dto.BoardResponseDto;
 import com.example.trelloprojects.board.dto.UpdateBoardColor;
 import com.example.trelloprojects.board.dto.UpdateBoardDescription;
 import com.example.trelloprojects.board.dto.UpdateBoardName;
@@ -29,35 +28,37 @@ public class BoardController {
     private final BoardService boardService;
 
     //Board 생성
+
     @PostMapping("/boards/{workspaceId}")
-    public ResponseEntity<ApiResponseDto> createBoard(@RequestBody BoardRequestDto requestDto,
+    public ResponseEntity<MsgResponseDto> createBoard(@RequestBody BoardRequestDto requestDto,
             @PathVariable Long workspaceId) {
         boardService.createBoard(requestDto, workspaceId);
-        return ResponseEntity.ok(new ApiResponseDto("회원가입 완료", 200));
+        return ResponseEntity.ok(new MsgResponseDto("회원가입 완료", 200));
     }
+
 
     //특정 Board 조회-> board 안에 모든 컬럼이 보이는 것으로
     @GetMapping("/boards/{boardId}")
-    public ResponseEntity<BoardResponseDto> getOneBoard(@PathVariable Long boardId) {
+    public ResponseEntity<BoardColumnResponseDto> getOneBoard(@PathVariable Long boardId) {
         return ResponseEntity.ok().body(boardService.getOneBoard(boardId));
     }
 
     //BoardName 변경ㅍ
     @PutMapping("/boards/{boardId}/name")
-    public ResponseEntity<ApiResponseDto> changeBoardName(@PathVariable Long boardId,
+    public ResponseEntity<MsgResponseDto> changeBoardName(@PathVariable Long boardId,
             @RequestBody UpdateBoardName requestDto) {
         boardService.changeBoardName(boardId, requestDto);
         return ResponseEntity.ok()
-                .body(new ApiResponseDto("보드 이름수정 완료", HttpStatus.CREATED.value()));
+                .body(new MsgResponseDto("보드 이름수정 완료", HttpStatus.CREATED.value()));
     }
 
     //BoardDescription 변경
     @PutMapping("/boards/{boardId}/description")
-    public ResponseEntity<ApiResponseDto> changeBoardDescription(@PathVariable Long boardId,
+    public ResponseEntity<MsgResponseDto> changeBoardDescription(@PathVariable Long boardId,
             @RequestBody UpdateBoardDescription requestDto) {
         boardService.changeBoardDescription(boardId, requestDto);
         return ResponseEntity.ok()
-                .body(new ApiResponseDto("보드 설명수정 완료", HttpStatus.CREATED.value()));
+                .body(new MsgResponseDto("보드 설명수정 완료", HttpStatus.CREATED.value()));
     }
 
     @PutMapping("/boards/{boardId}/color")
@@ -69,10 +70,11 @@ public class BoardController {
     }
 
     //Board 삭제
+
     @DeleteMapping("/boards/{boardId}")
-    public ResponseEntity<ApiResponseDto> deleteBoard(@PathVariable Long boardId) {
+    public ResponseEntity<MsgResponseDto> deleteBoard(@PathVariable Long boardId) {
         boardService.deleteBoard(boardId);
-        return ResponseEntity.ok().body(new ApiResponseDto("보드 삭제 완료", HttpStatus.CREATED.value()));
+        return ResponseEntity.ok().body(new MsgResponseDto("보드 삭제 완료", HttpStatus.CREATED.value()));
     }
 }
 

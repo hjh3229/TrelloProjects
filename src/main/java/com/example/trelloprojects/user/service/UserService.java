@@ -33,7 +33,6 @@ public class UserService {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final TokenProvider tokenProvider;
 
-    //To Do encode password
     @Transactional
     public User signUp(AddUserRequest request) {
         User checkUser = userRepository.findByEmail(request.getEmail());
