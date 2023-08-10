@@ -103,7 +103,8 @@ public class UserService {
                     .authenticate(
                             new UsernamePasswordAuthenticationToken(
                                     request.getEmail(),
-                                    request.getPassword()
+                                    request.getPassword(),
+                                    null
                             )
                     );
 

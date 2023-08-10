@@ -1,6 +1,5 @@
 package com.example.trelloprojects.card.entity;
 
-import com.example.trelloprojects.board.entity.Board;
 import com.example.trelloprojects.card.dto.CardRequestDto;
 import com.example.trelloprojects.columns.entity.Columns;
 import com.example.trelloprojects.comment.entity.Comment;
@@ -57,10 +56,6 @@ public class Card {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "board_id")
-    private Board board;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
     private List<UserCard> userCards = new ArrayList<>();
