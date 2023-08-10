@@ -5,14 +5,15 @@ import com.example.trelloprojects.board.entity.Board;
 import com.example.trelloprojects.board.repository.BoardRepository;
 import com.example.trelloprojects.common.error.BusinessException;
 import com.example.trelloprojects.common.error.ErrorCode;
+import com.example.trelloprojects.member.annotation.AdminOnly;
+import com.example.trelloprojects.member.entity.UserWorkspace;
+import com.example.trelloprojects.member.repository.UserWorkspaceRepository;
 import com.example.trelloprojects.user.entity.User;
 import com.example.trelloprojects.workspace.dto.CreateWorkspaceRequestDto;
 import com.example.trelloprojects.workspace.dto.UpdateWorkspaceRequestDto;
 import com.example.trelloprojects.workspace.dto.WorkspaceResponseDto;
-import com.example.trelloprojects.member.entity.UserWorkspace;
 import com.example.trelloprojects.workspace.entity.Workspace;
 import com.example.trelloprojects.workspace.enums.WorkspaceStatus;
-import com.example.trelloprojects.member.repository.UserWorkspaceRepository;
 import com.example.trelloprojects.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,52 +30,46 @@ public class WorkspaceService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public void createWorkspace(CreateWorkspaceRequestDto requestDto, User user) {
+    public WorkspaceResponseDto createWorkspace(CreateWorkspaceRequestDto requestDto, User user) {
         Workspace workspace = workspaceRepository.save(new Workspace(requestDto.getName(), requestDto.getDescription()));
         userWorkspaceRepository.save(new UserWorkspace(user, workspace));
-    }
-
-    public WorkspaceResponseDto getWorkspace(Long id) {
-        Workspace workspace = findActiveWorkspace(id);
         return workspace.toDto();
     }
 
-    @Transactional
-    public void updateWorkspace(Long id, UpdateWorkspaceRequestDto requestDto) {
-        Workspace workspace = findActiveWorkspace(id);
-        workspace.update(requestDto);
+    @Transactional(readOnly = true)
+    public WorkspaceResponseDto getWorkspace(Long workspaceId) {
+        Workspace workspace = findWorkspace(workspaceId);
+        return workspace.toDto();
     }
 
+    @AdminOnly
     @Transactional
-    public void deleteWorkspace(Long id) {
-        Workspace workspace = findActiveWorkspace(id);
+    public WorkspaceResponseDto updateWorkspace(Long workspaceId, UpdateWorkspaceRequestDto requestDto) {
+        Workspace workspace = findWorkspace(workspaceId);
+        workspace.update(requestDto);
+        return workspace.toDto();
+    }
+
+    @AdminOnly
+    @Transactional
+    public void deleteWorkspace(Long workspaceId) {
+        Workspace workspace = findWorkspace(workspaceId);
         workspace.delete();
     }
 
+    @AdminOnly
     @Transactional
-    public void reopenWorkspace(Long id) {
-        Workspace workspace = findDeletedWorkspace(id);
+    public void reopenWorkspace(Long deletedId) {
+        Workspace workspace = findDeletedWorkspace(deletedId);
         workspace.reopen();
     }
 
     @Transactional(readOnly = true)
-    public List<BoardResponseDto> getBoards(Long id) {
-        Workspace workspace = findActiveWorkspace(id);
-
-        return boardRepository.findByWorkspace(workspace)
+    public List<BoardResponseDto> getBoards(Long workspaceId) {
+        return boardRepository.findAllByWorkspaceId(workspaceId)
                 .stream()
                 .map(Board::toDto)
                 .toList();
-    }
-
-    private Workspace findActiveWorkspace(Long id) {
-        Workspace workspace = findWorkspace(id);
-
-        if (workspace.getStatus() == WorkspaceStatus.DELETED) {
-            throw new BusinessException(ErrorCode.DELETED_WORKSPACE);
-        }
-
-        return workspace;
     }
 
     private Workspace findDeletedWorkspace(Long id) {

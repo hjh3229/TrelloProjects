@@ -2,6 +2,8 @@ package com.example.trelloprojects.member.service;
 
 import com.example.trelloprojects.common.error.BusinessException;
 import com.example.trelloprojects.common.error.ErrorCode;
+import com.example.trelloprojects.member.annotation.AdminOnly;
+import com.example.trelloprojects.member.dto.AdminRoleUpdateRequestDto;
 import com.example.trelloprojects.member.dto.InviteMemberRequestDto;
 import com.example.trelloprojects.member.dto.MemberResponseDto;
 import com.example.trelloprojects.member.dto.RemoveMemberRequestDto;
@@ -11,9 +13,9 @@ import com.example.trelloprojects.member.enums.InvitationStatus;
 import com.example.trelloprojects.member.repository.InvitationRepository;
 import com.example.trelloprojects.member.repository.UserWorkspaceRepository;
 import com.example.trelloprojects.user.entity.User;
+import com.example.trelloprojects.user.entity.UserDetailsImpl;
 import com.example.trelloprojects.user.repository.UserRepository;
 import com.example.trelloprojects.workspace.entity.Workspace;
-import com.example.trelloprojects.workspace.enums.WorkspaceStatus;
 import com.example.trelloprojects.workspace.repository.WorkspaceRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -42,18 +44,19 @@ public class MemberService {
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; // 초대 코드 생성에 사용할 문자와 숫자
 
     @Transactional(readOnly = true)
-    public List<MemberResponseDto> getMembers(Long id) {
-        Workspace workspace = findActiveWorkspace(id);
+    public List<MemberResponseDto> getMembers(Long workspaceId) {
+        Workspace workspace = findWorkspace(workspaceId);
 
         return workspace.getMembers()
                 .stream()
-                .map(userWorkspace -> userWorkspace.getUser().toMemberResponseDto())
+                .map(UserWorkspace::toMemberResponseDto)
                 .toList();
     }
 
+    @AdminOnly
     @Transactional
-    public void inviteMember(Long id, InviteMemberRequestDto requestDto) throws MessagingException {
-        Workspace workspace = findActiveWorkspace(id);
+    public void inviteMember(Long workspaceId, InviteMemberRequestDto requestDto) throws MessagingException {
+        Workspace workspace = findWorkspace(workspaceId);
         User inviter = findUser(requestDto.getInviterId());
         String inviteeEmail = requestDto.getInviteeEmail();
 
@@ -64,18 +67,18 @@ public class MemberService {
         saveInvitation(workspace, inviter, inviteeEmail, inviteCode);
     }
 
+    @AdminOnly
     @Transactional
-    public void removeMember(Long id, RemoveMemberRequestDto requestDto) {
-        Workspace workspace = findActiveWorkspace(id);
+    public void removeMember(Long workspaceId, RemoveMemberRequestDto requestDto) {
         User user = findUser(requestDto.getMemberId());
 
-        UserWorkspace userWorkspace = findUserWorkspace(user, workspace);
+        UserWorkspace userWorkspace = findUserWorkspace(user.getId(), workspaceId);
         userWorkspaceRepository.delete(userWorkspace);
     }
 
     @Transactional
-    public void joinWorkspace(Long id, String inviteCode, User user) {
-        Workspace workspace = findActiveWorkspace(id);
+    public void joinWorkspace(Long workspaceId, String inviteCode, User user) {
+        Workspace workspace = findWorkspace(workspaceId);
         Invitation invitation = findPendingInvitation(inviteCode);
         invitation.markAsAccepted();
 
@@ -84,11 +87,22 @@ public class MemberService {
     }
 
     @Transactional
-    public void leaveWorkspace(Long id, User user) {
-        Workspace workspace = findActiveWorkspace(id);
-        UserWorkspace userWorkspace = findUserWorkspace(user, workspace);
-
+    public void leaveWorkspace(Long workspaceId, User user) {
+        UserWorkspace userWorkspace = findUserWorkspace(user.getId(), workspaceId);
         userWorkspaceRepository.delete(userWorkspace);
+    }
+
+    @AdminOnly
+    @Transactional
+    public void updateAdminRole(Long workspaceId, AdminRoleUpdateRequestDto requestDto) {
+        UserWorkspace userWorkspace = findUserWorkspace(requestDto.getUserId(), workspaceId);
+        userWorkspace.updateAdminRole(requestDto.getAdmin());
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isWorkspaceAdmin(Long workspaceId, UserDetailsImpl userDetails) {
+        UserWorkspace userWorkspace = findUserWorkspace(userDetails.getUser().getId(), workspaceId);
+        return userWorkspace.isAdmin();
     }
 
     private void sendWorkspaceInvitation(String inviteeEmail, String inviterName, String workspaceName, String inviteUrl) throws MessagingException {
@@ -131,18 +145,8 @@ public class MemberService {
     }
 
     private User findUser(Long id) {
-        return userRepository.findById(id).orElseThrow(() ->
-                new BusinessException(ErrorCode.USER_NOT_FOUND));
-    }
-
-    private Workspace findActiveWorkspace(Long id) {
-        Workspace workspace = findWorkspace(id);
-
-        if (workspace.getStatus() == WorkspaceStatus.DELETED) {
-            throw new BusinessException(ErrorCode.DELETED_WORKSPACE);
-        }
-
-        return workspace;
+        return userRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     private Workspace findWorkspace(Long id) {
@@ -150,8 +154,8 @@ public class MemberService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.WORKSPACE_NOT_FOUND));
     }
 
-    private UserWorkspace findUserWorkspace(User user, Workspace workspace) {
-        return userWorkspaceRepository.findByUserAndWorkspace(user, workspace)
+    private UserWorkspace findUserWorkspace(Long userId, Long workspaceId) {
+        return userWorkspaceRepository.findByUserIdAndWorkspaceId(userId, workspaceId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_DOES_NOT_BELONG_TO_WORKSPACE));
     }
 
