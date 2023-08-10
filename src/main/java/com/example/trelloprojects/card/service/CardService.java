@@ -30,11 +30,10 @@ public class CardService {
     private final UserRepository userRepository;
     private final UserCardRepository userCardRepository;
 
-    public CardResponseDto createCard(CardRequestDto requestDto, Long columnId) {
+    public void createCard(CardRequestDto requestDto, Long columnId) {
         Columns colum = findColumn(columnId);
         Long position = cardRepository.countCardsByColumns(colum);
         Card card = cardRepository.save(new Card(requestDto, colum, position));
-        return new CardResponseDto(card);
     }
 
     @Transactional(readOnly = true)

@@ -30,10 +30,10 @@ public class CardController {
     private final CardService cardService;
 
     @PostMapping("/card")
-    public ResponseEntity<CardResponseDto> createCard(@RequestParam Long columnId,
+    public ResponseEntity<MsgResponseDto> createCard(@RequestParam Long columnId,
             @RequestBody CardRequestDto requestDto) {
-        CardResponseDto result = cardService.createCard(requestDto, columnId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        cardService.createCard(requestDto, columnId);
+        return ResponseEntity.ok().body(new MsgResponseDto("카드 생성 성공", HttpStatus.OK.value()));
     }
 
     @GetMapping("/card")

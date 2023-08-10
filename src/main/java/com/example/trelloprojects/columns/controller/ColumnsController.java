@@ -29,15 +29,17 @@ public class ColumnsController {
     private final CardService cardService;
 
     @PostMapping("/column/{boardId}")
-    public ResponseEntity<Columns> addColumns(@PathVariable Long boardId,
+    public ResponseEntity<MsgResponseDto> addColumns(@PathVariable Long boardId,
             @RequestBody AddColumnsRequest request) {
-        return ResponseEntity.ok().body(columnsServiceImpl.addColumns(boardId, request));
+        columnsServiceImpl.addColumns(boardId, request);
+        return ResponseEntity.ok().body(new MsgResponseDto("컬럼 생성 성공", HttpStatus.OK.value()));
     }
 
     @PutMapping("/column/{columnId}")
-    public ResponseEntity<Columns> updateColumns(@PathVariable Long columnId,
+    public ResponseEntity<MsgResponseDto> updateColumns(@PathVariable Long columnId,
             @RequestBody UpdateColumnsRequest request) {
-        return ResponseEntity.ok().body(columnsServiceImpl.updateColumns(columnId, request));
+        columnsServiceImpl.updateColumns(columnId, request);
+        return ResponseEntity.ok().body(new MsgResponseDto("컬럼 수정 성공", HttpStatus.OK.value()));
     }
 
     @DeleteMapping("/column/{columnId}")
