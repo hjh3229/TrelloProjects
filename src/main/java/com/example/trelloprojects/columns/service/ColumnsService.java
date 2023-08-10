@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ColumnsService {
 
     @Transactional
-    Columns addColumns(Long boardId, AddColumnsRequest request);
+    void addColumns(Long boardId, AddColumnsRequest request);
 
     @Transactional
-    Columns updateColumns(Long columnId, UpdateColumnsRequest request);
+    void updateColumns(Long columnId, UpdateColumnsRequest request);
 
     @Transactional
     void deleteColumns(Long columnId);

@@ -1,6 +1,6 @@
 package com.example.trelloprojects.board.service;
 
-import com.example.trelloprojects.board.dto.ApiResponseDto;
+import com.example.trelloprojects.board.dto.BoardColumnResponseDto;
 import com.example.trelloprojects.board.dto.BoardRequestDto;
 import com.example.trelloprojects.board.dto.BoardResponseDto;
 import com.example.trelloprojects.board.entity.Board;
@@ -23,11 +23,11 @@ public class BoardService {
         return new BoardResponseDto(board);
     }
 
-    public BoardResponseDto getOneBoard(@RequestParam Long id) {
+    public BoardColumnResponseDto getOneBoard(@RequestParam Long id) {
         Board board =   boardRepository.findById(id).orElseThrow(
                 ()->new IllegalArgumentException()
         );
-        return new BoardResponseDto(board);
+        return new BoardColumnResponseDto(board);
     }
 
 
