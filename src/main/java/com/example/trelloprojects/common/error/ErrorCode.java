@@ -8,6 +8,8 @@ public enum ErrorCode {
 
     // user
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "U001", "존재하지 않는 사용자입니다."),
+    EXISTED_EMAIL(HttpStatus.BAD_REQUEST, "U002", "중복된 Email 입니다."),
+    PASSWORD_DO_NOT_MATCH(HttpStatus.BAD_REQUEST, "U003", "비밀번호가 일치하지 않습니다."),
 
     // workspace
     WORKSPACE_NOT_FOUND(HttpStatus.BAD_REQUEST, "W001", "존재하지 않는 워크스페이스입니다."),

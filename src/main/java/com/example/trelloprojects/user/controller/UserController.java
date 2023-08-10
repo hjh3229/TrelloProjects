@@ -3,6 +3,7 @@ package com.example.trelloprojects.user.controller;
 import com.example.trelloprojects.user.dto.AddUserRequest;
 import com.example.trelloprojects.user.dto.LoginRequest;
 import com.example.trelloprojects.user.dto.UpdateEmailRequest;
+import com.example.trelloprojects.user.dto.UpdatePasswordRequest;
 import com.example.trelloprojects.user.entity.User;
 import com.example.trelloprojects.user.entity.UserDetailsImpl;
 import com.example.trelloprojects.user.service.UserService;
@@ -31,7 +32,7 @@ public class UserController {
 
     @PostMapping("/log-in")
     public ResponseEntity<Void> logIn(HttpServletResponse httpResponse,
-            @RequestBody LoginRequest request) throws Exception {
+            @RequestBody LoginRequest request) {
         userService.logIn(httpResponse, request);
         return ResponseEntity.ok().build();
     }
@@ -41,6 +42,14 @@ public class UserController {
             @AuthenticationPrincipal
             UserDetailsImpl userDetails) {
         userService.updateEmail(request, userDetails);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<Void> updatePassword(@RequestBody UpdatePasswordRequest request,
+            @AuthenticationPrincipal
+            UserDetailsImpl userDetails) {
+        userService.updatePassword(request, userDetails);
         return ResponseEntity.ok().build();
     }
 
