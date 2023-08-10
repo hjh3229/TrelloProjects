@@ -73,6 +73,16 @@ public class UserService {
     }
 
     public void logIn(HttpServletResponse httpResponse, LoginRequest request) {
+        User checkUser = userRepository.findByEmail(request.getEmail());
+
+        if (checkUser != null) {
+            throw new BusinessException(ErrorCode.EMAIL_DO_NOT_MATCH);
+        }
+
+        if (!passwordEncoder.matches(request.getPassword(), request.getPassword())) {
+            throw new BusinessException(ErrorCode.PASSWORD_DO_NOT_MATCH);
+        }
+
         try {
             Authentication authentication = authenticationConfiguration.getAuthenticationManager()
                     .authenticate(

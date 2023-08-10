@@ -8,6 +8,8 @@ import com.example.trelloprojects.columns.dto.UpdateColumnsRequest;
 import com.example.trelloprojects.columns.entity.Columns;
 import com.example.trelloprojects.columns.repository.ColumnsRepository;
 import com.example.trelloprojects.columns.service.ColumnsService;
+import com.example.trelloprojects.common.error.BusinessException;
+import com.example.trelloprojects.common.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +26,7 @@ public class ColumnsServiceImpl implements ColumnsService {
     @Override
     public Columns addColumns(Long boardId, AddColumnsRequest request) {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(
-                () -> new IllegalArgumentException("not found" + boardId)
+                () -> new BusinessException(ErrorCode.BOARD_NOT_FOUND)
         );
         Long position = columnsRepository.countColumnsByBoard(findBoard);
         return columnsRepository.save(new Columns(request, position, findBoard));
@@ -65,7 +67,9 @@ public class ColumnsServiceImpl implements ColumnsService {
 
     @Override
     public Columns findColumn(Long columnId) {
-        return columnsRepository.findById(columnId).orElseThrow(IllegalArgumentException::new);
+        return columnsRepository.findById(columnId).orElseThrow(
+                () -> new BusinessException(ErrorCode.COLUMN_NOT_FOUND)
+        );
     }
 
 }
