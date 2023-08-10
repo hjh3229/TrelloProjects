@@ -30,10 +30,9 @@ public class WorkspaceService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public WorkspaceResponseDto createWorkspace(CreateWorkspaceRequestDto requestDto, User user) {
+    public void createWorkspace(CreateWorkspaceRequestDto requestDto, User user) {
         Workspace workspace = workspaceRepository.save(new Workspace(requestDto.getName(), requestDto.getDescription()));
         userWorkspaceRepository.save(new UserWorkspace(user, workspace));
-        return workspace.toDto();
     }
 
     @Transactional(readOnly = true)
@@ -44,10 +43,9 @@ public class WorkspaceService {
 
     @AdminOnly
     @Transactional
-    public WorkspaceResponseDto updateWorkspace(Long workspaceId, UpdateWorkspaceRequestDto requestDto) {
+    public void updateWorkspace(Long workspaceId, UpdateWorkspaceRequestDto requestDto) {
         Workspace workspace = findWorkspace(workspaceId);
         workspace.update(requestDto);
-        return workspace.toDto();
     }
 
     @AdminOnly
