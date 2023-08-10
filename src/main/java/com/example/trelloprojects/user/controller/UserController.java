@@ -4,6 +4,7 @@ import com.example.trelloprojects.common.dto.MsgResponseDto;
 import com.example.trelloprojects.user.dto.AddUserRequest;
 import com.example.trelloprojects.user.dto.LoginRequest;
 import com.example.trelloprojects.user.dto.UpdateEmailRequest;
+import com.example.trelloprojects.user.dto.UpdatePasswordRequest;
 import com.example.trelloprojects.user.entity.User;
 import com.example.trelloprojects.user.entity.UserDetailsImpl;
 import com.example.trelloprojects.user.service.UserService;
@@ -32,8 +33,9 @@ public class UserController {
     }
 
     @PostMapping("/log-in")
+
     public ResponseEntity<MsgResponseDto> logIn(HttpServletResponse httpResponse,
-            @RequestBody LoginRequest request) throws Exception {
+            @RequestBody LoginRequest request) {
         userService.logIn(httpResponse, request);
         return ResponseEntity.ok(new MsgResponseDto("로그인 성공", HttpStatus.OK.value()));
     }
@@ -44,6 +46,14 @@ public class UserController {
             UserDetailsImpl userDetails) {
         userService.updateEmail(request, userDetails);
         return ResponseEntity.ok(new MsgResponseDto("이메일 수정 성공", HttpStatus.OK.value()));
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<Void> updatePassword(@RequestBody UpdatePasswordRequest request,
+            @AuthenticationPrincipal
+            UserDetailsImpl userDetails) {
+        userService.updatePassword(request, userDetails);
+        return ResponseEntity.ok().build();
     }
 
 }

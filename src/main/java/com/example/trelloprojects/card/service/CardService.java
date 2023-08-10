@@ -8,6 +8,8 @@ import com.example.trelloprojects.card.entity.Card;
 import com.example.trelloprojects.card.repository.CardRepository;
 import com.example.trelloprojects.columns.entity.Columns;
 import com.example.trelloprojects.columns.repository.ColumnsRepository;
+import com.example.trelloprojects.common.error.BusinessException;
+import com.example.trelloprojects.common.error.ErrorCode;
 import com.example.trelloprojects.user.entity.User;
 import com.example.trelloprojects.user.repository.UserRepository;
 import com.example.trelloprojects.user_card.entity.UserCard;
@@ -62,7 +64,9 @@ public class CardService {
     public void setMember(String username, Long cardId) {
         User user = findUser(username);
         Card card = findCard(cardId);
-        UserCard userCard = userCardRepository.findByUserAndCard(user, card).orElse(null);
+        UserCard userCard = userCardRepository.findByUserAndCard(user, card).orElseThrow(() ->
+                new BusinessException(ErrorCode.USER_CARD_NOT_FOUND)
+        );
 
         if (userCard == null) {
             userCard = new UserCard(user, card);
@@ -80,26 +84,25 @@ public class CardService {
 
     private Columns findColumn(Long columnId) {
         return columRepository.findById(columnId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 컬럼입니다.")
+                new BusinessException(ErrorCode.COLUMN_NOT_FOUND)
         );
     }
 
     public Card findCard(Long cardId) {
         return cardRepository.findById(cardId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 카드입니다.")
+                new BusinessException(ErrorCode.CARD_NOT_FOUND)
         );
     }
 
     private User findUser(String username) {
         return userRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 유저입니다.")
+                new BusinessException(ErrorCode.USER_NOT_FOUND)
         );
     }
 
     //TO DO
     public void reorderCard(Long cardId, Long columnsId, CardReorderRequestDto reorderRequestDto) {
-        Card card = cardRepository.findById(cardId)
-                .orElseThrow(IllegalArgumentException::new);
+        Card card = findCard(cardId);
 
         Columns columns = card.getColumns();
         Long oldPosition = card.getPosition();
@@ -120,7 +123,7 @@ public class CardService {
 
         } else {
 
-            Columns requestcolumns = columRepository.findById(columnsId).orElse(null);
+            Columns requestcolumns = findColumn(columnsId);
 
             cardRepository.decrementBelow(card.getPosition(), String.valueOf(columns.getId()));
 

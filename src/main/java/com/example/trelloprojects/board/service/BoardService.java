@@ -1,64 +1,74 @@
 package com.example.trelloprojects.board.service;
 
-import com.example.trelloprojects.board.dto.BoardColumnResponseDto;
 import com.example.trelloprojects.board.dto.BoardRequestDto;
 import com.example.trelloprojects.board.dto.BoardResponseDto;
+import com.example.trelloprojects.board.dto.UpdateBoardColor;
+import com.example.trelloprojects.board.dto.UpdateBoardDescription;
+import com.example.trelloprojects.board.dto.UpdateBoardName;
 import com.example.trelloprojects.board.entity.Board;
 import com.example.trelloprojects.board.repository.BoardRepository;
-import lombok.AllArgsConstructor;
+import com.example.trelloprojects.common.error.BusinessException;
+import com.example.trelloprojects.common.error.ErrorCode;
+import com.example.trelloprojects.workspace.entity.Workspace;
+import com.example.trelloprojects.workspace.repository.WorkspaceRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
-@AllArgsConstructor
-@Transactional
+@RequiredArgsConstructor
 public class BoardService {
+    
     private final BoardRepository boardRepository;
+    private final WorkspaceRepository workspaceRepository;
 
-    public BoardResponseDto createBoard(@RequestBody BoardRequestDto requestDto) {
-        Board board = new Board(requestDto);
+    @Transactional
+    public void createBoard(BoardRequestDto requestDto, Long workspaceId) {
+        Workspace workspace = workspaceRepository.findById(workspaceId).orElseThrow(() ->
+                new BusinessException(ErrorCode.WORKSPACE_NOT_FOUND)
+        );
+        Board board = new Board(requestDto, workspace);
         boardRepository.save(board);
-        return new BoardResponseDto(board);
     }
 
-    public BoardColumnResponseDto getOneBoard(@RequestParam Long id) {
-        Board board =   boardRepository.findById(id).orElseThrow(
-                ()->new IllegalArgumentException()
-        );
-        return new BoardColumnResponseDto(board);
+    @Transactional(readOnly = true)
+    public BoardResponseDto getOneBoard(Long id) {
+        Board board = findBoard(id);
+        return board.toDto();
     }
 
+    @Transactional
+    public void changeBoardName(Long id, UpdateBoardName requestDto) {
+        Board board = findBoard(id);
 
-    public BoardResponseDto changeBoardName(@RequestParam Long id,@RequestBody BoardRequestDto requestDto) {
-        Board board =   boardRepository.findById(id).orElseThrow(
-                ()->new IllegalArgumentException()
-        );
-
-        System.out.println(requestDto.getName());
         board.updateName(requestDto);
-        System.out.println(board.getName());
-
-        return new BoardResponseDto(board);
     }
 
-    public BoardResponseDto changeBoardDescription(@RequestParam Long id,@RequestBody BoardRequestDto requestDto) {
-        Board board = boardRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException()
-        );
+    @Transactional
+    public void changeBoardDescription(Long id, UpdateBoardDescription requestDto) {
+        Board board = findBoard(id);
+
         board.updateDescription(requestDto);
-
-        return new BoardResponseDto(board);
     }
 
-    public void deleteBoard(@RequestParam Long id) {
-        Board board =   boardRepository.findById(id).orElseThrow(
-                ()->new IllegalArgumentException()
-        );
+    @Transactional
+    public void deleteBoard(Long id) {
+        Board board = findBoard(id);
+
         boardRepository.delete(board);
     }
 
-
+    private Board findBoard(Long id) {
+        return boardRepository.findById(id).orElseThrow(
+                () -> new BusinessException(ErrorCode.BOARD_NOT_FOUND)
+        );
     }
+
+    @Transactional
+    public void changeBoardColor(Long boardId, UpdateBoardColor requestDto) {
+        Board board = findBoard(boardId);
+
+        board.updateColor(requestDto);
+    }
+}
 

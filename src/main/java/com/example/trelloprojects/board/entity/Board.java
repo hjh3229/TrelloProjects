@@ -2,8 +2,13 @@ package com.example.trelloprojects.board.entity;
 
 import com.example.trelloprojects.board.dto.BoardRequestDto;
 import com.example.trelloprojects.board.dto.BoardResponseDto;
+
+import com.example.trelloprojects.board.dto.UpdateBoardColor;
+import com.example.trelloprojects.board.dto.UpdateBoardDescription;
+import com.example.trelloprojects.board.dto.UpdateBoardName;
 import com.example.trelloprojects.card.entity.Card;
 import com.example.trelloprojects.columns.entity.Columns;
+
 import com.example.trelloprojects.common.entity.ColorEnum;
 import com.example.trelloprojects.workspace.entity.Workspace;
 import jakarta.persistence.CascadeType;
@@ -53,11 +58,11 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Columns> columns = new ArrayList<>();
 
-    public Board(BoardRequestDto requestDto){
-        this.name=requestDto.getName();
-        this.description= requestDto.getDescription();
-        this.color=requestDto.getColor();
-        this.workspace=requestDto.getWorkspace();
+    public Board(BoardRequestDto requestDto, Workspace workspace) {
+        this.name = requestDto.getName();
+        this.description = requestDto.getDescription();
+        this.color = requestDto.getColor();
+        this.workspace = workspace;
     }
 
     public BoardResponseDto toDto() {
@@ -70,11 +75,15 @@ public class Board {
     }
 
 
-    public void updateName(BoardRequestDto requestDto) {
+    public void updateName(UpdateBoardName requestDto) {
         this.name = requestDto.getName();
     }
 
-    public void updateDescription(BoardRequestDto requestDto) {
+    public void updateDescription(UpdateBoardDescription requestDto) {
         this.description = requestDto.getDescription();
+    }
+
+    public void updateColor(UpdateBoardColor requestDto) {
+        this.color = requestDto.getColor();
     }
 }

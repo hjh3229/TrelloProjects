@@ -1,12 +1,9 @@
 package com.example.trelloprojects.user.entity;
 
 
-
+import com.example.trelloprojects.member.dto.MemberResponseDto;
 import com.example.trelloprojects.user.dto.AddUserRequest;
 import com.example.trelloprojects.user.dto.UpdateEmailRequest;
-
-import com.example.trelloprojects.member.dto.MemberResponseDto;
-
 import com.example.trelloprojects.user_card.entity.UserCard;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -24,7 +21,6 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -48,7 +44,7 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
-  
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserCard> userCards = new ArrayList<>();
 
@@ -62,6 +58,7 @@ public class User {
     public void updateEmail(UpdateEmailRequest request) {
         this.email = request.getEmail();
     }
+
     public MemberResponseDto toMemberResponseDto() {
         return MemberResponseDto.builder()
                 .id(this.id)
@@ -69,5 +66,9 @@ public class User {
                 .email(this.email)
                 .build();
 
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 }
