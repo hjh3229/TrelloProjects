@@ -74,11 +74,11 @@ public class UserService {
     public void logIn(HttpServletResponse httpResponse, LoginRequest request) {
         User checkUser = userRepository.findByEmail(request.getEmail());
 
-        if (checkUser != null) {
+        if (checkUser == null) {
             throw new BusinessException(ErrorCode.EMAIL_DO_NOT_MATCH);
         }
 
-        if (!passwordEncoder.matches(request.getPassword(), request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), checkUser.getPassword())) {
             throw new BusinessException(ErrorCode.PASSWORD_DO_NOT_MATCH);
         }
 

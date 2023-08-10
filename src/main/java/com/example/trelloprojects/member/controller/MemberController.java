@@ -24,7 +24,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping
+    @GetMapping("/members")
     public ResponseEntity<List<MemberResponseDto>> getMembers(@PathVariable Long workspaceId) {
         List<MemberResponseDto> members = memberService.getMembers(workspaceId);
         return ResponseEntity.ok(members);

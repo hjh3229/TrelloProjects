@@ -3,6 +3,7 @@ package com.example.trelloprojects.common.error;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,9 +38,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
     }
 
+    // Spring Security PreAuthorize 실패한 경우
+    @ExceptionHandler(AccessDeniedException.class)
+    protected  ResponseEntity<ErrorResponseDto> handleAccessDeniedException(AccessDeniedException e) {
+        log.error("AccessDeniedException", e);
+        ErrorResponseDto errorResponse = ErrorResponseDto.of(HttpStatus.FORBIDDEN.toString(), "워크스페이스 관리자 권한이 필요합니다.");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
     // 비즈니스 로직 실행 중 에러 발생하는 경우
-    @ExceptionHandler(value = { BusinessException.class })
-    protected ResponseEntity<ErrorResponseDto> handleConflict(BusinessException e) {
+    @ExceptionHandler(value = BusinessException.class)
+    protected ResponseEntity<ErrorResponseDto> handleBusinessException(BusinessException e) {
         log.error("BusinessException", e);
         ErrorResponseDto errorResponse = ErrorResponseDto.of(e.getErrorCode().getCode(), e.getMessage());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(errorResponse);
