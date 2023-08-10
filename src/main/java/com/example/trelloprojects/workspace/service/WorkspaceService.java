@@ -31,8 +31,12 @@ public class WorkspaceService {
 
     @Transactional
     public void createWorkspace(CreateWorkspaceRequestDto requestDto, User user) {
-        Workspace workspace = workspaceRepository.save(new Workspace(requestDto.getName(), requestDto.getDescription()));
-        userWorkspaceRepository.save(new UserWorkspace(user, workspace));
+        Workspace workspace = new Workspace(requestDto.getName(), requestDto.getDescription());
+        workspaceRepository.save(workspace);
+
+        UserWorkspace userWorkspace = new UserWorkspace(user, workspace);
+        userWorkspace.updateAdminRole(true);
+        userWorkspaceRepository.save(userWorkspace);
     }
 
     @Transactional(readOnly = true)
