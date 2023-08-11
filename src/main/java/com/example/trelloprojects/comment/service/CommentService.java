@@ -29,7 +29,7 @@ public class CommentService {
     @Transactional
     public void editComment(User user, CommentRequestDto requestDto, Long commentId) {
         Comment comment = findComment(commentId);
-        if (comment.getUser().equals(user)) {
+        if (comment.getUser().getId().equals(user.getId())) {
             comment.setContent(requestDto.getContent());
         } else {
             throw new BusinessException(ErrorCode.INVALID_USER);
@@ -38,7 +38,7 @@ public class CommentService {
 
     public void deleteComment(User user, Long commentId) {
         Comment comment = findComment(commentId);
-        if (comment.getUser().equals(user)) {
+        if (comment.getUser().getId().equals(user.getId())) {
             commentRepository.delete(comment);
         } else {
             throw new BusinessException(ErrorCode.INVALID_USER);

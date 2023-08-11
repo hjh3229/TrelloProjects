@@ -3,7 +3,6 @@ package com.example.trelloprojects.card.controller;
 import com.example.trelloprojects.card.dto.CardCommentResponseDto;
 import com.example.trelloprojects.card.dto.CardReorderRequestDto;
 import com.example.trelloprojects.card.dto.CardRequestDto;
-import com.example.trelloprojects.card.dto.CardResponseDto;
 import com.example.trelloprojects.card.service.CardService;
 import com.example.trelloprojects.common.dto.MsgResponseDto;
 import java.time.LocalDateTime;
@@ -77,11 +76,11 @@ public class CardController {
     }
 
     @PutMapping("/card/{cardId}/reorder")
-    public ResponseEntity<Void> reorderCard(@PathVariable Long cardId,
+    public ResponseEntity<MsgResponseDto> reorderCard(@PathVariable Long cardId,
             @RequestParam(required = false) Long columnsId,
             @RequestBody CardReorderRequestDto reorderRequestDto) {
         cardService.reorderCard(cardId, columnsId, reorderRequestDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(new MsgResponseDto("카드순서 재정렬", HttpStatus.OK.value()));
     }
 
 }
