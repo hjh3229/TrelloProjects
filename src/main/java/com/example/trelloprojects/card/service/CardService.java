@@ -3,7 +3,6 @@ package com.example.trelloprojects.card.service;
 import com.example.trelloprojects.card.dto.CardCommentResponseDto;
 import com.example.trelloprojects.card.dto.CardReorderRequestDto;
 import com.example.trelloprojects.card.dto.CardRequestDto;
-import com.example.trelloprojects.card.dto.CardResponseDto;
 import com.example.trelloprojects.card.entity.Card;
 import com.example.trelloprojects.card.repository.CardRepository;
 import com.example.trelloprojects.columns.entity.Columns;
@@ -64,9 +63,7 @@ public class CardService {
     public void setMember(String username, Long cardId) {
         User user = findUser(username);
         Card card = findCard(cardId);
-        UserCard userCard = userCardRepository.findByUserAndCard(user, card).orElseThrow(() ->
-                new BusinessException(ErrorCode.USER_CARD_NOT_FOUND)
-        );
+        UserCard userCard = userCardRepository.findByUserAndCard(user, card).orElse(null);
 
         if (userCard == null) {
             userCard = new UserCard(user, card);
@@ -79,6 +76,8 @@ public class CardService {
 
     public void deleteCard(Long cardId) {
         Card card = findCard(cardId);
+        cardRepository.decrementBelow(card.getPosition(),
+                String.valueOf(card.getColumns().getId()));
         cardRepository.delete(card);
     }
 
