@@ -61,8 +61,8 @@ public class WorkspaceService {
 
     @AdminOnly
     @Transactional
-    public void reopenWorkspace(Long deletedId) {
-        Workspace workspace = findDeletedWorkspace(deletedId);
+    public void reopenWorkspace(Long workspaceId) {
+        Workspace workspace = findDeletedWorkspace(workspaceId);
         workspace.reopen();
     }
 
