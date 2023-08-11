@@ -8,8 +8,10 @@ import com.example.trelloprojects.workspace.repository.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.stereotype.Component;
 
 @Aspect
+@Component
 @RequiredArgsConstructor
 public class WorkspaceActivationAspect {
 
@@ -18,6 +20,7 @@ public class WorkspaceActivationAspect {
     @Before("(execution(public * com.example.trelloprojects.member.service.*.*(..)) || " +
             "execution(public * com.example.trelloprojects.workspace.service.*.*(..))) && " +
             "!execution(public * com.example.trelloprojects.workspace.service.WorkspaceService.reopenWorkspace(Long)) && " +
+            "!execution(public * com.example.trelloprojects.member.service.MemberService.isWorkspaceAdmin(Long, ..)) && " +
             "args(workspaceId, ..)")
     public void checkWorkspaceActivation(Long workspaceId) {
         Workspace workspace = workspaceRepository.findById(workspaceId)
