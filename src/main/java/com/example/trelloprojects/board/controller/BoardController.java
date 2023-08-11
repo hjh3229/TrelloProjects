@@ -33,7 +33,7 @@ public class BoardController {
     public ResponseEntity<MsgResponseDto> createBoard(@RequestBody BoardRequestDto requestDto,
             @PathVariable Long workspaceId) {
         boardService.createBoard(requestDto, workspaceId);
-        return ResponseEntity.ok(new MsgResponseDto("회원가입 완료", 200));
+        return ResponseEntity.ok(new MsgResponseDto("보드 생성 완료", 200));
     }
 
 

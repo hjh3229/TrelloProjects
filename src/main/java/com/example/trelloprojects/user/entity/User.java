@@ -71,4 +71,12 @@ public class User {
     public void updatePassword(String password) {
         this.password = password;
     }
+
+    public void updateRoleWithDraw() {
+        this.role = UserRoleEnum.WITHDRAW;
+    }
+
+    public void updateRoleUSER() {
+        this.role = UserRoleEnum.USER;
+    }
 }
