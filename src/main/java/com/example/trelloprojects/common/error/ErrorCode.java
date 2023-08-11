@@ -9,8 +9,9 @@ public enum ErrorCode {
     // user
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "U001", "존재하지 않는 사용자입니다."),
     EXISTED_EMAIL(HttpStatus.CONFLICT, "U002", "중복된 이메일 입니다."),
-    EMAIL_DO_NOT_MATCH(HttpStatus.BAD_REQUEST, "U003", "이메일이 일치하지 않습니다."),
+    BAD_ID_PASSWORD(HttpStatus.BAD_REQUEST, "U003", "아이디나 비밀번호가 맞지 않습니다."),
     PASSWORD_DO_NOT_MATCH(HttpStatus.BAD_REQUEST, "U004", "비밀번호가 일치하지 않습니다."),
+    WITHDRAW_USER(HttpStatus.BAD_REQUEST, "U005", "휴먼계정 입니다."),
 
     // board
     BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "B001", "존재하지 않는 보드입니다."),
