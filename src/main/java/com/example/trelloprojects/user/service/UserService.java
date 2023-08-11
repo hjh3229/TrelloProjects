@@ -84,6 +84,11 @@ public class UserService {
         User checkUser = userRepository.findByEmail(request.getEmail());
         String password = checkUser.getPassword();
 
+        if (checkUser == null) {
+            throw new BusinessException(ErrorCode.EMAIL_DO_NOT_MATCH);
+        }
+
+      
         if (!passwordEncoder.matches(request.getPassword(), password)) {
             throw new BusinessException(ErrorCode.BAD_ID_PASSWORD);
         }
@@ -96,6 +101,7 @@ public class UserService {
                 () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
         );
     }
+
 
     public void logIn(HttpServletResponse httpResponse, LoginRequest request) {
         try {
