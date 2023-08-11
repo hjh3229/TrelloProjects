@@ -81,19 +81,19 @@ public class UserService {
     @Transactional
     public void activate(LoginRequest request) {
 
-        User checkUser = userRepository.findByEmail(request.getEmail());
-        String password = checkUser.getPassword();
+        try {
+            User checkUser = userRepository.findByEmail(request.getEmail());
+            String password = checkUser.getPassword();
 
-        if (checkUser == null) {
-            throw new BusinessException(ErrorCode.EMAIL_DO_NOT_MATCH);
-        }
+            if (!passwordEncoder.matches(request.getPassword(), password)) {
+                throw new BusinessException(ErrorCode.BAD_ID_PASSWORD);
+            }
 
-      
-        if (!passwordEncoder.matches(request.getPassword(), password)) {
+            checkUser.updateRoleUSER();
+        } catch (Exception e) {
             throw new BusinessException(ErrorCode.BAD_ID_PASSWORD);
         }
-
-        checkUser.updateRoleUSER();
+        
     }
 
     public User findUser(UserDetailsImpl userDetails) {
